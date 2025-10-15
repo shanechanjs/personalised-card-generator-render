@@ -779,8 +779,18 @@ def index():
 
                 // File upload handling
                 imageInput.addEventListener('change', handleImageUpload);
-                uploadArea.addEventListener('click', () => {
+                imageInput.addEventListener('click', (event) => {
+                    // Stop propagation to prevent triggering uploadArea click
+                    event.stopPropagation();
+                });
+                uploadArea.addEventListener('click', (event) => {
+                    // Prevent double-triggering if clicking directly on the file input
+                    if (event.target === imageInput) {
+                        return;
+                    }
                     console.log('Upload area clicked, triggering file input...');
+                    event.preventDefault();
+                    event.stopPropagation();
                     imageInput.click();
                 });
                 uploadArea.addEventListener('dragover', handleDragOver);
