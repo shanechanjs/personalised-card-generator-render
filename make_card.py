@@ -1110,7 +1110,7 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     
     # 5. Ability section with enhanced styling like original
     ability_y = stats_y + stats_height + 25
-    ability_height = 140
+    ability_height = 180
     
     # Ability background with gradient
     ability_bg = create_gradient_background(card_width - 40, ability_height, colors['secondary'], colors['primary'])
@@ -1122,7 +1122,7 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     # Effect description
     effect_desc = card_data.get('effect_description', 'No description available.')
     # Wrap text - use full available width
-    max_chars = (card_width - 2 * margin - 40) // 8
+    max_chars = (card_width - 2 * margin - 40) // 9
     wrapped_desc = textwrap.fill(effect_desc, width=max_chars)
     # Draw description without shadow
     draw.text((margin + 20, ability_y + 15), wrapped_desc, fill=colors['text'], font=text_font)
