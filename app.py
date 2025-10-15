@@ -997,7 +997,8 @@ def index():
 
                 function showResult(data) {
                     // Display generated card
-                    generatedCard.src = `/card/${encodeURIComponent(data.filename)}`;
+                    # generatedCard.src = `/card/${encodeURIComponent(data.filename)}`;
+                    generatedCard.src = `${encodeURIComponent(data.filename)}`;
                     generatedCard.alt = `${data.character_name} Card`;
                     
                     // Display character name
