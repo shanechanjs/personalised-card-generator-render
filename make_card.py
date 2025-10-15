@@ -109,7 +109,7 @@ def generate_card_data(traits, api_key):
 {
     "card_name": "Creative and funny name based on personality traits in the things about this character",
     "custom_type": "One of the 20 personality types below that BEST matches the character",
-    "custom_type_icon": "A single emoji that represents this personality type",
+    "custom_type_icon": "A single Japanese kanji character or Unicode symbol (not emoji) that represents this personality type. Use only characters that will render properly as text (e.g., 気 for mood, 炎 for fire/spicy, 鬼 for chaotic, 心 for emotional types, etc.)",
     "trait_icon": "A single emoji that represents the most prominent trait from the 5 things about this character",
     "stat1_name": "Creative stat name (e.g., 'Chaos', 'Rizz', 'Drama', 'Stealth', 'Cringe Level', 'Vibe Strength')",
     "stat1_value": number (100-3000, increments of 100),
@@ -154,7 +154,7 @@ MOVEMENT & AVOIDANCE:
 IMPORTANT RULES:
 1. CARD NAME: If a person's name is mentioned, incorporate it. Otherwise, create a funny/creative name from personality traits. NEVER use generic names or filenames.
 2. Choose the MOST FITTING personality type from the 20 options above based on the dominant trait in the things about this character.
-3. Select an emoji for custom_type_icon that visually represents that personality type.
+3. Select a single Japanese kanji character or Unicode symbol (not emoji) for custom_type_icon that visually represents that personality type. Ensure the character will render properly in standard fonts.
 4. Select a different emoji for trait_icon that represents the most prominent trait from the 5 things about this character.
 5. Create 2 UNIQUE and CREATIVE stat names that match the personality (not generic ATK/DEF).
 6. Stat values should increment by 100s and somewhat reflect personality strength (100-3000 range).
@@ -162,9 +162,9 @@ IMPORTANT RULES:
 8. Suggest 2-3 visual effects that would enhance the card's personality aesthetically.
 
 Examples:
-- Things about being the life of the party → Type: "Juice", Icon: "⚡", Stats: "Charisma"/2400, "Energy"/2100
-- Things about always ghosting plans → Type: "Ghost", Icon: "👻", Stats: "Vanish Speed"/2800, "Commitment"/200
-- Things about excessive flexing → Type: "Flex", Icon: "💪", Stats: "Clout"/2700, "Humility"/100"""
+- Things about being the life of the party → Type: "Juice", Icon: "雷", Stats: "Charisma"/2400, "Energy"/2100
+- Things about always ghosting plans → Type: "Ghost", Icon: "霊", Stats: "Vanish Speed"/2800, "Commitment"/200
+- Things about excessive flexing → Type: "Flex", Icon: "力", Stats: "Clout"/2700, "Humility"/100"""
                     },
                     {
                         "role": "user",
@@ -848,10 +848,10 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     print(f"[DEBUG] Loading fonts for category: {category}")
     print(f"[DEBUG] Font paths: {fonts}")
     try:
-        title_font = ImageFont.truetype(fonts["title"], 28)
-        header_font = ImageFont.truetype(fonts["header"], 20)
-        stat_font = ImageFont.truetype(fonts["stat"], 18)
-        text_font = ImageFont.truetype(fonts["text"], 16)
+        title_font = ImageFont.truetype(fonts["title"], 20)
+        header_font = ImageFont.truetype(fonts["header"], 16)
+        stat_font = ImageFont.truetype(fonts["stat"], 14)
+        text_font = ImageFont.truetype(fonts["text"], 12)
         print("[DEBUG] Successfully loaded category-specific fonts")
     except (OSError, IOError) as e:
         print(f"[DEBUG] Category fonts failed: {e}")
@@ -859,70 +859,70 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
         # Fallback to different fonts based on category if category fonts not available
         try:
             if category == "cute":
-                title_font = ImageFont.truetype("comic.ttf", 28)
-                header_font = ImageFont.truetype("comic.ttf", 20)
-                stat_font = ImageFont.truetype("verdana.ttf", 18)
-                text_font = ImageFont.truetype("calibri.ttf", 16)
+                title_font = ImageFont.truetype("comic.ttf", 20)
+                header_font = ImageFont.truetype("comic.ttf", 16)
+                stat_font = ImageFont.truetype("verdana.ttf", 14)
+                text_font = ImageFont.truetype("calibri.ttf", 12)
             elif category == "cool":
-                title_font = ImageFont.truetype("calibri.ttf", 28)
-                header_font = ImageFont.truetype("arial.ttf", 20)
-                stat_font = ImageFont.truetype("consola.ttf", 18)
-                text_font = ImageFont.truetype("calibri.ttf", 16)
+                title_font = ImageFont.truetype("calibri.ttf", 20)
+                header_font = ImageFont.truetype("arial.ttf", 16)
+                stat_font = ImageFont.truetype("consola.ttf", 14)
+                text_font = ImageFont.truetype("calibri.ttf", 12)
             elif category == "heroic":
-                title_font = ImageFont.truetype("impact.ttf", 28)
-                header_font = ImageFont.truetype("impact.ttf", 20)
-                stat_font = ImageFont.truetype("arial.ttf", 18)
-                text_font = ImageFont.truetype("tahoma.ttf", 16)
+                title_font = ImageFont.truetype("impact.ttf", 20)
+                header_font = ImageFont.truetype("impact.ttf", 16)
+                stat_font = ImageFont.truetype("arial.ttf", 14)
+                text_font = ImageFont.truetype("tahoma.ttf", 12)
             elif category == "legendary":
-                title_font = ImageFont.truetype("times.ttf", 28)
-                header_font = ImageFont.truetype("georgia.ttf", 20)
-                stat_font = ImageFont.truetype("georgia.ttf", 18)
-                text_font = ImageFont.truetype("times.ttf", 16)
+                title_font = ImageFont.truetype("times.ttf", 20)
+                header_font = ImageFont.truetype("georgia.ttf", 16)
+                stat_font = ImageFont.truetype("georgia.ttf", 14)
+                text_font = ImageFont.truetype("times.ttf", 12)
             elif category == "mystical":
-                title_font = ImageFont.truetype("georgia.ttf", 28)
-                header_font = ImageFont.truetype("times.ttf", 20)
-                stat_font = ImageFont.truetype("georgia.ttf", 18)
-                text_font = ImageFont.truetype("trebuc.ttf", 16)
+                title_font = ImageFont.truetype("georgia.ttf", 20)
+                header_font = ImageFont.truetype("times.ttf", 16)
+                stat_font = ImageFont.truetype("georgia.ttf", 14)
+                text_font = ImageFont.truetype("trebuc.ttf", 12)
             elif category == "chaotic":
-                title_font = ImageFont.truetype("impact.ttf", 28)
-                header_font = ImageFont.truetype("trebuc.ttf", 20)
-                stat_font = ImageFont.truetype("consola.ttf", 18)
-                text_font = ImageFont.truetype("calibri.ttf", 16)
+                title_font = ImageFont.truetype("impact.ttf", 20)
+                header_font = ImageFont.truetype("trebuc.ttf", 16)
+                stat_font = ImageFont.truetype("consola.ttf", 14)
+                text_font = ImageFont.truetype("calibri.ttf", 12)
             elif category == "fierce":
-                title_font = ImageFont.truetype("impact.ttf", 28)
-                header_font = ImageFont.truetype("arial.ttf", 20)
-                stat_font = ImageFont.truetype("verdana.ttf", 18)
-                text_font = ImageFont.truetype("tahoma.ttf", 16)
+                title_font = ImageFont.truetype("impact.ttf", 20)
+                header_font = ImageFont.truetype("arial.ttf", 16)
+                stat_font = ImageFont.truetype("verdana.ttf", 14)
+                text_font = ImageFont.truetype("tahoma.ttf", 12)
             elif category == "wise":
-                title_font = ImageFont.truetype("times.ttf", 28)
-                header_font = ImageFont.truetype("georgia.ttf", 20)
-                stat_font = ImageFont.truetype("consola.ttf", 18)
-                text_font = ImageFont.truetype("georgia.ttf", 16)
+                title_font = ImageFont.truetype("times.ttf", 20)
+                header_font = ImageFont.truetype("georgia.ttf", 16)
+                stat_font = ImageFont.truetype("consola.ttf", 14)
+                text_font = ImageFont.truetype("georgia.ttf", 12)
             else:
                 # Default fallback
-                title_font = ImageFont.truetype("arial.ttf", 28)
-                header_font = ImageFont.truetype("arial.ttf", 20)
-                stat_font = ImageFont.truetype("arial.ttf", 18)
-                text_font = ImageFont.truetype("arial.ttf", 16)
+                title_font = ImageFont.truetype("arial.ttf", 20)
+                header_font = ImageFont.truetype("arial.ttf", 16)
+                stat_font = ImageFont.truetype("arial.ttf", 14)
+                text_font = ImageFont.truetype("arial.ttf", 12)
         except (OSError, IOError) as e:
             print(f"[DEBUG] Category fallback fonts failed: {e}")
             print("[DEBUG] Trying final fallback...")
             # Final fallback - try to use system fonts with proper sizes
             try:
-                title_font = ImageFont.truetype("arial.ttf", 28)
-                header_font = ImageFont.truetype("arial.ttf", 20)
-                stat_font = ImageFont.truetype("arial.ttf", 18)
-                text_font = ImageFont.truetype("arial.ttf", 16)
+                title_font = ImageFont.truetype("arial.ttf", 20)
+                header_font = ImageFont.truetype("arial.ttf", 16)
+                stat_font = ImageFont.truetype("arial.ttf", 14)
+                text_font = ImageFont.truetype("arial.ttf", 12)
                 print("[DEBUG] Successfully loaded final fallback fonts")
             except (OSError, IOError):
                 # Absolute last resort - use larger cross-platform fallback
                 print("WARNING: All font loading failed - using larger cross-platform fallback")
                 try:
                     # Try DejaVuSans which is commonly available on Linux systems
-                    title_font = ImageFont.truetype("DejaVuSans.ttf", 60)
-                    header_font = ImageFont.truetype("DejaVuSans.ttf", 45)
-                    stat_font = ImageFont.truetype("DejaVuSans.ttf", 40)
-                    text_font = ImageFont.truetype("DejaVuSans.ttf", 35)
+                    title_font = ImageFont.truetype("DejaVuSans.ttf", 40)
+                    header_font = ImageFont.truetype("DejaVuSans.ttf", 32)
+                    stat_font = ImageFont.truetype("DejaVuSans.ttf", 28)
+                    text_font = ImageFont.truetype("DejaVuSans.ttf", 24)
                     print("[DEBUG] Successfully loaded DejaVuSans fallback fonts")
                 except (OSError, IOError):
                     # Last resort - use default font with larger sizes
@@ -931,10 +931,10 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
                         # Try to load default font and scale it up
                         base_font = ImageFont.load_default()
                         # Create larger fonts by using a scaling factor
-                        title_font = ImageFont.truetype("arial.ttf", 60) if os.path.exists("arial.ttf") else base_font
-                        header_font = ImageFont.truetype("arial.ttf", 45) if os.path.exists("arial.ttf") else base_font
-                        stat_font = ImageFont.truetype("arial.ttf", 40) if os.path.exists("arial.ttf") else base_font
-                        text_font = ImageFont.truetype("arial.ttf", 35) if os.path.exists("arial.ttf") else base_font
+                        title_font = ImageFont.truetype("arial.ttf", 40) if os.path.exists("arial.ttf") else base_font
+                        header_font = ImageFont.truetype("arial.ttf", 32) if os.path.exists("arial.ttf") else base_font
+                        stat_font = ImageFont.truetype("arial.ttf", 28) if os.path.exists("arial.ttf") else base_font
+                        text_font = ImageFont.truetype("arial.ttf", 24) if os.path.exists("arial.ttf") else base_font
                         print("[DEBUG] Using scaled default fonts")
                     except:
                         # Absolute last resort - use default font as-is
