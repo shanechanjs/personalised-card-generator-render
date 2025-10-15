@@ -1033,12 +1033,11 @@ def index():
                         stats.push({ label: cardData.stat2_name, value: cardData.stat2_value });
                     }
                     
-                    // Add personality type info
-                    if (cardData.custom_type) {
+                    // Add personality type info with kanji
+                    if (cardData.custom_type && cardData.custom_type_icon) {
+                        stats.push({ label: 'Type', value: `${cardData.custom_type_icon} ${cardData.custom_type}` });
+                    } else if (cardData.custom_type) {
                         stats.push({ label: 'Type', value: cardData.custom_type });
-                    }
-                    if (cardData.custom_type_icon) {
-                        stats.push({ label: 'Icon', value: cardData.custom_type_icon });
                     }
 
                     cardStats.innerHTML = stats.map(stat => `
