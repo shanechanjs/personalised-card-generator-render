@@ -846,66 +846,66 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     # Load category-specific fonts like original
     fonts = get_category_fonts(category)
     try:
-        title_font = ImageFont.truetype(fonts["title"], 48)
-        header_font = ImageFont.truetype(fonts["header"], 32)
-        stat_font = ImageFont.truetype(fonts["stat"], 28)
-        text_font = ImageFont.truetype(fonts["text"], 24)
+        title_font = ImageFont.truetype(fonts["title"], 40)
+        header_font = ImageFont.truetype(fonts["header"], 28)
+        stat_font = ImageFont.truetype(fonts["stat"], 24)
+        text_font = ImageFont.truetype(fonts["text"], 22)
     except (OSError, IOError):
         # Fallback to different fonts based on category if category fonts not available
         try:
             if category == "cute":
-                title_font = ImageFont.truetype("comic.ttf", 48)
-                header_font = ImageFont.truetype("comic.ttf", 32)
-                stat_font = ImageFont.truetype("verdana.ttf", 28)
-                text_font = ImageFont.truetype("calibri.ttf", 24)
+                title_font = ImageFont.truetype("comic.ttf", 40)
+                header_font = ImageFont.truetype("comic.ttf", 28)
+                stat_font = ImageFont.truetype("verdana.ttf", 24)
+                text_font = ImageFont.truetype("calibri.ttf", 22)
             elif category == "cool":
-                title_font = ImageFont.truetype("calibri.ttf", 48)
-                header_font = ImageFont.truetype("arial.ttf", 32)
-                stat_font = ImageFont.truetype("consola.ttf", 28)
-                text_font = ImageFont.truetype("calibri.ttf", 24)
+                title_font = ImageFont.truetype("calibri.ttf", 40)
+                header_font = ImageFont.truetype("arial.ttf", 28)
+                stat_font = ImageFont.truetype("consola.ttf", 24)
+                text_font = ImageFont.truetype("calibri.ttf", 22)
             elif category == "heroic":
-                title_font = ImageFont.truetype("impact.ttf", 48)
-                header_font = ImageFont.truetype("impact.ttf", 32)
-                stat_font = ImageFont.truetype("arial.ttf", 28)
-                text_font = ImageFont.truetype("tahoma.ttf", 24)
+                title_font = ImageFont.truetype("impact.ttf", 40)
+                header_font = ImageFont.truetype("impact.ttf", 28)
+                stat_font = ImageFont.truetype("arial.ttf", 24)
+                text_font = ImageFont.truetype("tahoma.ttf", 22)
             elif category == "legendary":
-                title_font = ImageFont.truetype("times.ttf", 48)
-                header_font = ImageFont.truetype("georgia.ttf", 32)
-                stat_font = ImageFont.truetype("georgia.ttf", 28)
-                text_font = ImageFont.truetype("times.ttf", 24)
+                title_font = ImageFont.truetype("times.ttf", 40)
+                header_font = ImageFont.truetype("georgia.ttf", 28)
+                stat_font = ImageFont.truetype("georgia.ttf", 24)
+                text_font = ImageFont.truetype("times.ttf", 22)
             elif category == "mystical":
-                title_font = ImageFont.truetype("georgia.ttf", 48)
-                header_font = ImageFont.truetype("times.ttf", 32)
-                stat_font = ImageFont.truetype("georgia.ttf", 28)
-                text_font = ImageFont.truetype("trebuc.ttf", 24)
+                title_font = ImageFont.truetype("georgia.ttf", 40)
+                header_font = ImageFont.truetype("times.ttf", 28)
+                stat_font = ImageFont.truetype("georgia.ttf", 24)
+                text_font = ImageFont.truetype("trebuc.ttf", 22)
             elif category == "chaotic":
-                title_font = ImageFont.truetype("impact.ttf", 48)
-                header_font = ImageFont.truetype("trebuc.ttf", 32)
-                stat_font = ImageFont.truetype("consola.ttf", 28)
-                text_font = ImageFont.truetype("calibri.ttf", 24)
+                title_font = ImageFont.truetype("impact.ttf", 40)
+                header_font = ImageFont.truetype("trebuc.ttf", 28)
+                stat_font = ImageFont.truetype("consola.ttf", 24)
+                text_font = ImageFont.truetype("calibri.ttf", 22)
             elif category == "fierce":
-                title_font = ImageFont.truetype("impact.ttf", 48)
-                header_font = ImageFont.truetype("arial.ttf", 32)
-                stat_font = ImageFont.truetype("verdana.ttf", 28)
-                text_font = ImageFont.truetype("tahoma.ttf", 24)
+                title_font = ImageFont.truetype("impact.ttf", 40)
+                header_font = ImageFont.truetype("arial.ttf", 28)
+                stat_font = ImageFont.truetype("verdana.ttf", 24)
+                text_font = ImageFont.truetype("tahoma.ttf", 22)
             elif category == "wise":
-                title_font = ImageFont.truetype("times.ttf", 48)
-                header_font = ImageFont.truetype("georgia.ttf", 32)
-                stat_font = ImageFont.truetype("consola.ttf", 28)
-                text_font = ImageFont.truetype("georgia.ttf", 24)
+                title_font = ImageFont.truetype("times.ttf", 40)
+                header_font = ImageFont.truetype("georgia.ttf", 28)
+                stat_font = ImageFont.truetype("consola.ttf", 24)
+                text_font = ImageFont.truetype("georgia.ttf", 22)
             else:
                 # Default fallback
-                title_font = ImageFont.truetype("arial.ttf", 48)
-                header_font = ImageFont.truetype("arial.ttf", 32)
-                stat_font = ImageFont.truetype("arial.ttf", 28)
-                text_font = ImageFont.truetype("arial.ttf", 24)
+                title_font = ImageFont.truetype("arial.ttf", 40)
+                header_font = ImageFont.truetype("arial.ttf", 28)
+                stat_font = ImageFont.truetype("arial.ttf", 24)
+                text_font = ImageFont.truetype("arial.ttf", 22)
         except (OSError, IOError):
             # Final fallback - try to use system fonts with proper sizes
             try:
-                title_font = ImageFont.truetype("arial.ttf", 48)
-                header_font = ImageFont.truetype("arial.ttf", 32)
-                stat_font = ImageFont.truetype("arial.ttf", 28)
-                text_font = ImageFont.truetype("arial.ttf", 24)
+                title_font = ImageFont.truetype("arial.ttf", 40)
+                header_font = ImageFont.truetype("arial.ttf", 28)
+                stat_font = ImageFont.truetype("arial.ttf", 24)
+                text_font = ImageFont.truetype("arial.ttf", 22)
             except (OSError, IOError):
                 # Absolute last resort - use default but warn user
                 print("WARNING: Using default fonts - text may appear small")
@@ -1150,6 +1150,8 @@ def create_card_image(source_image_path, card_data):
         return False
     except Exception as e:
         print(f"[ERROR] Failed to create card image: {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 
