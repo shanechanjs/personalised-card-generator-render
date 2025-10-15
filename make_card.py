@@ -110,6 +110,7 @@ def generate_card_data(traits, api_key):
     "card_name": "Creative and funny name based on personality traits in the things about this character",
     "custom_type": "One of the 20 personality types below that BEST matches the character",
     "custom_type_icon": "A single emoji that represents this personality type",
+    "trait_icon": "A single emoji that represents the most prominent trait from the 5 things about this character",
     "stat1_name": "Creative stat name (e.g., 'Chaos', 'Rizz', 'Drama', 'Stealth', 'Cringe Level', 'Vibe Strength')",
     "stat1_value": number (100-3000, increments of 100),
     "stat2_name": "Different creative stat name that complements stat1",
@@ -154,10 +155,11 @@ IMPORTANT RULES:
 1. CARD NAME: If a person's name is mentioned, incorporate it. Otherwise, create a funny/creative name from personality traits. NEVER use generic names or filenames.
 2. Choose the MOST FITTING personality type from the 20 options above based on the dominant trait in the things about this character.
 3. Select an emoji for custom_type_icon that visually represents that personality type.
-4. Create 2 UNIQUE and CREATIVE stat names that match the personality (not generic ATK/DEF).
-5. Stat values should increment by 100s and somewhat reflect personality strength (100-3000 range).
-6. Effect description: Write like a Yu-Gi-Oh card effect with meme-like twist, 3-5 COMPLETE sentences (no cut-off mid-sentence), MUST reference a core idea from EACH of the 5 things. Use Yu-Gi-Oh formatting style with internet humor. Keep under 380 characters to ensure all sentences are complete. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).
-7. Suggest 2-3 visual effects that would enhance the card's personality aesthetically.
+4. Select a different emoji for trait_icon that represents the most prominent trait from the 5 things about this character.
+5. Create 2 UNIQUE and CREATIVE stat names that match the personality (not generic ATK/DEF).
+6. Stat values should increment by 100s and somewhat reflect personality strength (100-3000 range).
+7. Effect description: Write like a Yu-Gi-Oh card effect with meme-like twist, 3-5 COMPLETE sentences (no cut-off mid-sentence), MUST reference a core idea from EACH of the 5 things. Use Yu-Gi-Oh formatting style with internet humor. Keep under 380 characters to ensure all sentences are complete. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).
+8. Suggest 2-3 visual effects that would enhance the card's personality aesthetically.
 
 Examples:
 - Things about being the life of the party → Type: "Juice", Icon: "⚡", Stats: "Charisma"/2400, "Energy"/2100
@@ -844,18 +846,61 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     # Load category-specific fonts like original
     fonts = get_category_fonts(category)
     try:
-        title_font = ImageFont.truetype(fonts["title"], 28)
-        header_font = ImageFont.truetype(fonts["header"], 20)
-        stat_font = ImageFont.truetype(fonts["stat"], 18)
-        text_font = ImageFont.truetype(fonts["text"], 16)
+        title_font = ImageFont.truetype(fonts["title"], 36)
+        header_font = ImageFont.truetype(fonts["header"], 24)
+        stat_font = ImageFont.truetype(fonts["stat"], 22)
+        text_font = ImageFont.truetype(fonts["text"], 20)
     except (OSError, IOError):
-        # Fallback to default fonts if category fonts not available
+        # Fallback to different fonts based on category if category fonts not available
         try:
-            title_font = ImageFont.truetype("arial.ttf", 28)
-            header_font = ImageFont.truetype("arial.ttf", 20)
-            stat_font = ImageFont.truetype("arial.ttf", 18)
-            text_font = ImageFont.truetype("arial.ttf", 16)
+            if category == "cute":
+                title_font = ImageFont.truetype("comic.ttf", 36)
+                header_font = ImageFont.truetype("comic.ttf", 24)
+                stat_font = ImageFont.truetype("verdana.ttf", 22)
+                text_font = ImageFont.truetype("calibri.ttf", 20)
+            elif category == "cool":
+                title_font = ImageFont.truetype("calibri.ttf", 36)
+                header_font = ImageFont.truetype("arial.ttf", 24)
+                stat_font = ImageFont.truetype("consola.ttf", 22)
+                text_font = ImageFont.truetype("calibri.ttf", 20)
+            elif category == "heroic":
+                title_font = ImageFont.truetype("impact.ttf", 36)
+                header_font = ImageFont.truetype("impact.ttf", 24)
+                stat_font = ImageFont.truetype("arial.ttf", 22)
+                text_font = ImageFont.truetype("tahoma.ttf", 20)
+            elif category == "legendary":
+                title_font = ImageFont.truetype("times.ttf", 36)
+                header_font = ImageFont.truetype("georgia.ttf", 24)
+                stat_font = ImageFont.truetype("georgia.ttf", 22)
+                text_font = ImageFont.truetype("times.ttf", 20)
+            elif category == "mystical":
+                title_font = ImageFont.truetype("georgia.ttf", 36)
+                header_font = ImageFont.truetype("times.ttf", 24)
+                stat_font = ImageFont.truetype("georgia.ttf", 22)
+                text_font = ImageFont.truetype("trebuc.ttf", 20)
+            elif category == "chaotic":
+                title_font = ImageFont.truetype("impact.ttf", 36)
+                header_font = ImageFont.truetype("trebuc.ttf", 24)
+                stat_font = ImageFont.truetype("consola.ttf", 22)
+                text_font = ImageFont.truetype("calibri.ttf", 20)
+            elif category == "fierce":
+                title_font = ImageFont.truetype("impact.ttf", 36)
+                header_font = ImageFont.truetype("arial.ttf", 24)
+                stat_font = ImageFont.truetype("verdana.ttf", 22)
+                text_font = ImageFont.truetype("tahoma.ttf", 20)
+            elif category == "wise":
+                title_font = ImageFont.truetype("times.ttf", 36)
+                header_font = ImageFont.truetype("georgia.ttf", 24)
+                stat_font = ImageFont.truetype("consola.ttf", 22)
+                text_font = ImageFont.truetype("georgia.ttf", 20)
+            else:
+                # Default fallback
+                title_font = ImageFont.truetype("arial.ttf", 36)
+                header_font = ImageFont.truetype("arial.ttf", 24)
+                stat_font = ImageFont.truetype("arial.ttf", 22)
+                text_font = ImageFont.truetype("arial.ttf", 20)
         except (OSError, IOError):
+            # Final fallback to default fonts with larger sizes
             title_font = ImageFont.load_default()
             header_font = ImageFont.load_default()
             stat_font = ImageFont.load_default()
@@ -889,9 +934,14 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     add_text_shadow(draw, card_name, (margin + 15, header_y + 10), title_font, 
                    colors['text'], (0, 0, 0, 100))
     
-    # 2. Type badge with icon (in header like original)
+    # 2. Type badge with icons (in header like original)
     type_text = card_data.get('custom_type', 'Unknown')
-    type_bbox = draw.textbbox((0, 0), type_text, font=header_font)
+    type_icon = card_data.get('custom_type_icon', '✨')
+    trait_icon = card_data.get('trait_icon', '⭐')
+    
+    # Calculate width for type badge with icon
+    type_with_icon = f"{type_icon} {type_text}"
+    type_bbox = draw.textbbox((0, 0), type_with_icon, font=header_font)
     type_width = type_bbox[2] - type_bbox[0] + 20
     type_x = card_width - margin - type_width - 15
     type_y = header_y + 15
@@ -899,7 +949,12 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     # Type badge background
     draw.rounded_rectangle([type_x, type_y, type_x + type_width, type_y + 30], 
                          radius=8, fill=colors['accent'])
-    draw.text((type_x + 10, type_y + 5), type_text, fill=colors['background'], font=header_font)
+    draw.text((type_x + 10, type_y + 5), type_with_icon, fill=colors['background'], font=header_font)
+    
+    # Add trait icon next to the type badge
+    trait_icon_x = type_x + type_width + 10
+    trait_icon_y = type_y + 5
+    draw.text((trait_icon_x, trait_icon_y), trait_icon, fill=colors['text'], font=header_font)
     
     # 3. Image section with rounded frame like original
     image_y = header_y + header_height + 20
@@ -1006,8 +1061,8 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     
     # Effect description
     effect_desc = card_data.get('effect_description', 'No description available.')
-    # Wrap text - use full available width
-    max_chars = (card_width - 2 * margin - 40) // 10  # Match original text wrap calculation
+    # Wrap text - use full available width (doubled the length before wrapping)
+    max_chars = (card_width - 2 * margin - 40) // 5  # Double the text length before wrapping
     wrapped_desc = textwrap.fill(effect_desc, width=max_chars)
     # Draw description without shadow
     draw.text((margin + 20, ability_y + 15), wrapped_desc, fill=colors['text'], font=text_font)
@@ -1164,8 +1219,10 @@ Example usage:
     # Handle emoji display safely for console
     try:
         print(f"  Custom Type: {card_data.get('custom_type', 'Vibe')} {card_data.get('custom_type_icon', '✨')}")
+        print(f"  Trait Icon: {card_data.get('trait_icon', '⭐')}")
     except UnicodeEncodeError:
         print(f"  Custom Type: {card_data.get('custom_type', 'Vibe')} [emoji]")
+        print(f"  Trait Icon: [emoji]")
     print(f"  {card_data.get('stat1_name', 'Stat1')}: {card_data.get('stat1_value', 0)}")
     print(f"  {card_data.get('stat2_name', 'Stat2')}: {card_data.get('stat2_value', 0)}")
     print(f"  Effect: {card_data.get('effect_description', 'No effect.')}")
