@@ -845,12 +845,17 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     
     # Load category-specific fonts like original
     fonts = get_category_fonts(category)
+    print(f"[DEBUG] Loading fonts for category: {category}")
+    print(f"[DEBUG] Font paths: {fonts}")
     try:
         title_font = ImageFont.truetype(fonts["title"], 40)
         header_font = ImageFont.truetype(fonts["header"], 28)
         stat_font = ImageFont.truetype(fonts["stat"], 24)
         text_font = ImageFont.truetype(fonts["text"], 22)
-    except (OSError, IOError):
+        print("[DEBUG] Successfully loaded category-specific fonts")
+    except (OSError, IOError) as e:
+        print(f"[DEBUG] Category fonts failed: {e}")
+        print("[DEBUG] Trying fallback fonts...")
         # Fallback to different fonts based on category if category fonts not available
         try:
             if category == "cute":
@@ -899,20 +904,36 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
                 header_font = ImageFont.truetype("arial.ttf", 28)
                 stat_font = ImageFont.truetype("arial.ttf", 24)
                 text_font = ImageFont.truetype("arial.ttf", 22)
-        except (OSError, IOError):
+        except (OSError, IOError) as e:
+            print(f"[DEBUG] Category fallback fonts failed: {e}")
+            print("[DEBUG] Trying final fallback...")
             # Final fallback - try to use system fonts with proper sizes
             try:
                 title_font = ImageFont.truetype("arial.ttf", 40)
                 header_font = ImageFont.truetype("arial.ttf", 28)
                 stat_font = ImageFont.truetype("arial.ttf", 24)
                 text_font = ImageFont.truetype("arial.ttf", 22)
+                print("[DEBUG] Successfully loaded final fallback fonts")
             except (OSError, IOError):
-                # Absolute last resort - use default but warn user
-                print("WARNING: Using default fonts - text may appear small")
-                title_font = ImageFont.load_default()
-                header_font = ImageFont.load_default()
-                stat_font = ImageFont.load_default()
-                text_font = ImageFont.load_default()
+                # Absolute last resort - force larger fonts
+                print("WARNING: All font loading failed - forcing larger fonts")
+                # Create a larger default font by scaling
+                try:
+                    # Try common Windows fonts
+                    title_font = ImageFont.truetype("C:/Windows/Fonts/arial.ttf", 40)
+                    header_font = ImageFont.truetype("C:/Windows/Fonts/arial.ttf", 28)
+                    stat_font = ImageFont.truetype("C:/Windows/Fonts/arial.ttf", 24)
+                    text_font = ImageFont.truetype("C:/Windows/Fonts/arial.ttf", 22)
+                    print("Successfully loaded Windows fonts")
+                except:
+                    # Last resort - use default but create a larger version
+                    print("Using scaled default fonts")
+                    base_font = ImageFont.load_default()
+                    # Create larger fonts by using a scaling factor
+                    title_font = ImageFont.truetype("arial.ttf", 40) if os.path.exists("arial.ttf") else base_font
+                    header_font = ImageFont.truetype("arial.ttf", 28) if os.path.exists("arial.ttf") else base_font
+                    stat_font = ImageFont.truetype("arial.ttf", 24) if os.path.exists("arial.ttf") else base_font
+                    text_font = ImageFont.truetype("arial.ttf", 22) if os.path.exists("arial.ttf") else base_font
     
     # Simple ornate border with glow effect like original
     corner_radius = 15
@@ -1070,7 +1091,7 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     # Effect description
     effect_desc = card_data.get('effect_description', 'No description available.')
     # Wrap text - use full available width (doubled the length before wrapping)
-    max_chars = (card_width - 2 * margin - 40) // 4  # Double the text length before wrapping
+    max_chars = (card_width - 2 * margin - 40) // 5  # Double the text length before wrapping
     wrapped_desc = textwrap.fill(effect_desc, width=max_chars)
     # Draw description without shadow
     draw.text((margin + 20, ability_y + 15), wrapped_desc, fill=colors['text'], font=text_font)
