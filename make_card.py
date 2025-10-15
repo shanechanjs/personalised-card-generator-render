@@ -109,8 +109,6 @@ def generate_card_data(traits, api_key):
 {
     "card_name": "Creative and funny name based on personality traits in the things about this character (max 25 characters including spaces)",
     "custom_type": "One of the 20 personality types below that BEST matches the character",
-    "custom_type_icon": "A single Japanese kanji character or Unicode symbol (not emoji) that represents this personality type. Use only characters that will render properly as text (e.g., 気 for mood, 炎 for fire/spicy, 鬼 for chaotic, 心 for emotional types, etc.)",
-    "trait_icon": "A single emoji that represents the most prominent trait from the 5 things about this character",
     "stat1_name": "Creative stat name (e.g., 'Chaos', 'Rizz', 'Drama', 'Stealth', 'Cringe Level', 'Vibe Strength')",
     "stat1_value": number (100-3000, increments of 100),
     "stat2_name": "Different creative stat name that complements stat1",
@@ -154,17 +152,15 @@ MOVEMENT & AVOIDANCE:
 IMPORTANT RULES:
 1. CARD NAME: Must be max 25 characters including spaces. If a person's name is mentioned, incorporate it. Otherwise, create a funny/creative name from personality traits. NEVER use generic names or filenames.
 2. Choose the MOST FITTING personality type from the 20 options above based on the dominant trait in the things about this character.
-3. Select a single Japanese kanji character or Unicode symbol (not emoji) for custom_type_icon that visually represents that personality type. Ensure the character will render properly in standard fonts.
-4. Select a different emoji for trait_icon that represents the most prominent trait from the 5 things about this character.
-5. Create 2 UNIQUE and CREATIVE stat names that match the personality (not generic ATK/DEF).
-6. Stat values should increment by 100s and somewhat reflect personality strength (100-3000 range).
-7. Effect description: Write like a Yu-Gi-Oh card effect with meme-like twist, 3-5 COMPLETE sentences (no cut-off mid-sentence), MUST reference a core idea from EACH of the 5 things. Use Yu-Gi-Oh formatting style with internet humor. Keep under 380 characters to ensure all sentences are complete. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).
-8. Suggest 2-3 visual effects that would enhance the card's personality aesthetically.
+3. Create 2 UNIQUE and CREATIVE stat names that match the personality (not generic ATK/DEF).
+4. Stat values should increment by 100s and somewhat reflect personality strength (100-3000 range).
+5. Effect description: Write like a Yu-Gi-Oh card effect with meme-like twist, 3-5 COMPLETE sentences (no cut-off mid-sentence), MUST reference a core idea from EACH of the 5 things. Use Yu-Gi-Oh formatting style with internet humor. Keep under 380 characters to ensure all sentences are complete. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).
+6. Suggest 2-3 visual effects that would enhance the card's personality aesthetically.
 
 Examples:
-- Things about being the life of the party → Type: "Juice", Icon: "雷", Stats: "Charisma"/2400, "Energy"/2100
-- Things about always ghosting plans → Type: "Ghost", Icon: "霊", Stats: "Vanish Speed"/2800, "Commitment"/200
-- Things about excessive flexing → Type: "Flex", Icon: "力", Stats: "Clout"/2700, "Humility"/100"""
+- Things about being the life of the party → Type: "Juice", Stats: "Charisma"/2400, "Energy"/2100
+- Things about always ghosting plans → Type: "Ghost", Stats: "Vanish Speed"/2800, "Commitment"/200
+- Things about excessive flexing → Type: "Flex", Stats: "Clout"/2700, "Humility"/100"""
                     },
                     {
                         "role": "user",
@@ -976,13 +972,8 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     add_text_shadow(draw, card_name, (margin + 15, header_y + 10), title_font, 
                    colors['text'], (0, 0, 0, 100))
     
-    # 2. Type badge with kanji character (in header like original)
+    # 2. Type badge (in header like original)
     type_text = card_data.get('custom_type', 'Unknown')
-    type_icon = card_data.get('custom_type_icon', '✨')
-    
-    # Debug logging for icon
-    print(f"[DEBUG] Type icon: '{type_icon}' (length: {len(type_icon)})")
-    print(f"[DEBUG] Type icon repr: {repr(type_icon)}")
     
     # Try to load a Unicode-capable font for type badge (larger size)
     try:
@@ -1119,11 +1110,56 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     canvas.paste(ability_bg, (20, ability_y), ability_bg)
     draw = ImageDraw.Draw(canvas)
     
-    # Effect description
+    # Effect description with dynamic text wrapping to prevent overflow
     effect_desc = card_data.get('effect_description', 'No description available.')
-    # Wrap text - use full available width
-    max_chars = (card_width - 2 * margin - 40) // 9
-    wrapped_desc = textwrap.fill(effect_desc, width=max_chars)
+    
+    # Calculate available space for text
+    text_area_width = card_width - 2 * margin - 40 - 20  # Account for padding
+    text_area_height = ability_height - 30  # Account for top/bottom margins
+    
+    # Use textbbox to measure actual text dimensions and wrap dynamically
+    max_width_px = text_area_width
+    
+    # Start with a reasonable character estimate and adjust
+    words = effect_desc.split()
+    lines = []
+    current_line = []
+    
+    for word in words:
+        test_line = ' '.join(current_line + [word])
+        bbox = draw.textbbox((0, 0), test_line, font=text_font)
+        line_width = bbox[2] - bbox[0]
+        
+        if line_width <= max_width_px:
+            current_line.append(word)
+        else:
+            if current_line:
+                lines.append(' '.join(current_line))
+                current_line = [word]
+            else:
+                # Single word is too long, add it anyway
+                lines.append(word)
+                current_line = []
+    
+    if current_line:
+        lines.append(' '.join(current_line))
+    
+    wrapped_desc = '\n'.join(lines)
+    
+    # Check if text height exceeds available space and truncate if needed
+    bbox = draw.textbbox((0, 0), wrapped_desc, font=text_font)
+    text_height = bbox[3] - bbox[1]
+    
+    if text_height > text_area_height:
+        # Remove lines from bottom until it fits
+        while lines and text_height > text_area_height:
+            lines.pop()
+            if lines:
+                lines[-1] = lines[-1].rstrip() + '...'
+            wrapped_desc = '\n'.join(lines)
+            bbox = draw.textbbox((0, 0), wrapped_desc, font=text_font)
+            text_height = bbox[3] - bbox[1]
+    
     # Draw description without shadow
     draw.text((margin + 20, ability_y + 15), wrapped_desc, fill=colors['text'], font=text_font)
 
