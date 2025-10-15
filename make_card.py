@@ -113,7 +113,7 @@ def generate_card_data(traits, api_key):
     "stat1_value": number (100-3000, increments of 100),
     "stat2_name": "Different creative stat name that complements stat1",
     "stat2_value": number (100-3000, increments of 100),
-    "effect_description": "Write like a Yu-Gi-Oh card effect description with meme-like twist. 3-5 sentences. Must include a clear nod to EACH of the 5 things (at least one distinct idea per thing). Use Yu-Gi-Oh formatting style (e.g., 'When this card is activated...', 'This card cannot be...', etc.) with internet meme humor. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).",
+    "effect_description": "Write like a Yu-Gi-Oh card effect description with meme-like twist. 3-4 sentences maximum. Must include a clear nod to EACH of the 5 things (at least one distinct idea per thing). Use Yu-Gi-Oh formatting style (e.g., 'When this card is activated...', 'This card cannot be...', etc.) with internet meme humor. MAXIMUM 280 CHARACTERS TOTAL including spaces and punctuation. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).",
     "visual_effects": ["effect1", "effect2"] // Suggest 2-3 visual effects like "sparkles", "flames", "lightning", "glitch", "shadows", "stars", "spiral", "smoke", "neon", "bubbles"
 }
 
@@ -154,7 +154,7 @@ IMPORTANT RULES:
 2. Choose the MOST FITTING personality type from the 20 options above based on the dominant trait in the things about this character.
 3. Create 2 UNIQUE and CREATIVE stat names that match the personality (not generic ATK/DEF).
 4. Stat values should increment by 100s and somewhat reflect personality strength (100-3000 range).
-5. Effect description: Write like a Yu-Gi-Oh card effect with meme-like twist, 3-5 COMPLETE sentences (no cut-off mid-sentence), MUST reference a core idea from EACH of the 5 things. Use Yu-Gi-Oh formatting style with internet humor. Keep under 380 characters to ensure all sentences are complete. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).
+5. Effect description: Write like a Yu-Gi-Oh card effect with meme-like twist, 3-4 COMPLETE sentences MAXIMUM (no cut-off mid-sentence), MUST reference a core idea from EACH of the 5 things. Use Yu-Gi-Oh formatting style with internet humor. CRITICAL: MAXIMUM 280 CHARACTERS TOTAL including spaces and punctuation - this is a hard limit to ensure text fits in the card. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).
 6. Suggest 2-3 visual effects that would enhance the card's personality aesthetically.
 
 Examples:
@@ -233,7 +233,7 @@ Examples:
             missing = _find_uncovered_traits(effect_desc, traits)
             if missing:
                 # Targeted rewrite to include all 5 traits
-                rewrite_user = "Rewrite ONLY the effect_description below into 3-5 COMPLETE sentences in Yu-Gi-Oh card effect style with meme-like twist. It must nod to EACH of the 5 things with at least one distinct idea per thing. Use Yu-Gi-Oh formatting (e.g., 'When this card is activated...', 'This card cannot be...') with internet humor. Max 380 characters total. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).\n\nThings about character:\n" + "\n".join(f"- {i+1}. {t}" for i, t in enumerate(traits)) + "\n\nCurrent effect_description:\n" + effect_desc + "\n\nReturn only the rewritten effect_description text."
+                rewrite_user = "Rewrite ONLY the effect_description below into 3-4 COMPLETE sentences MAXIMUM in Yu-Gi-Oh card effect style with meme-like twist. It must nod to EACH of the 5 things with at least one distinct idea per thing. Use Yu-Gi-Oh formatting (e.g., 'When this card is activated...', 'This card cannot be...') with internet humor. CRITICAL: MAXIMUM 280 CHARACTERS TOTAL including spaces and punctuation. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).\n\nThings about character:\n" + "\n".join(f"- {i+1}. {t}" for i, t in enumerate(traits)) + "\n\nCurrent effect_description:\n" + effect_desc + "\n\nReturn only the rewritten effect_description text."
                 rewrite_resp = client.chat.completions.create(
                     model="gpt-4o",
                     messages=[
@@ -246,13 +246,13 @@ Examples:
                 msg_content = rewrite_resp.choices[0].message.content or ""
                 new_text = msg_content.strip()
                 if new_text:
-                    card_data['effect_description'] = shorten_to_chars(sanitize_ascii(new_text), 380)
+                    card_data['effect_description'] = shorten_to_chars(sanitize_ascii(new_text), 280)
         except Exception as _:
             # If rewrite fails, proceed with original effect description
-            card_data['effect_description'] = shorten_to_chars(sanitize_ascii(effect_desc), 380)
+            card_data['effect_description'] = shorten_to_chars(sanitize_ascii(effect_desc), 280)
 
         # Always sanitize the primary generation too
-        card_data['effect_description'] = shorten_to_chars(sanitize_ascii(card_data.get('effect_description', '')), 380)
+        card_data['effect_description'] = shorten_to_chars(sanitize_ascii(card_data.get('effect_description', '')), 280)
         print(f"[SUCCESS] Generated card data for personality type: {card_data.get('custom_type', 'unknown')}")
         return card_data
         
