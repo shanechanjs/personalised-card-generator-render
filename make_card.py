@@ -848,10 +848,10 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     print(f"[DEBUG] Loading fonts for category: {category}")
     print(f"[DEBUG] Font paths: {fonts}")
     try:
-        title_font = ImageFont.truetype(fonts["title"], 40)
-        header_font = ImageFont.truetype(fonts["header"], 28)
-        stat_font = ImageFont.truetype(fonts["stat"], 24)
-        text_font = ImageFont.truetype(fonts["text"], 22)
+        title_font = ImageFont.truetype(fonts["title"], 28)
+        header_font = ImageFont.truetype(fonts["header"], 20)
+        stat_font = ImageFont.truetype(fonts["stat"], 18)
+        text_font = ImageFont.truetype(fonts["text"], 16)
         print("[DEBUG] Successfully loaded category-specific fonts")
     except (OSError, IOError) as e:
         print(f"[DEBUG] Category fonts failed: {e}")
@@ -859,81 +859,94 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
         # Fallback to different fonts based on category if category fonts not available
         try:
             if category == "cute":
-                title_font = ImageFont.truetype("comic.ttf", 40)
-                header_font = ImageFont.truetype("comic.ttf", 28)
-                stat_font = ImageFont.truetype("verdana.ttf", 24)
-                text_font = ImageFont.truetype("calibri.ttf", 22)
+                title_font = ImageFont.truetype("comic.ttf", 28)
+                header_font = ImageFont.truetype("comic.ttf", 20)
+                stat_font = ImageFont.truetype("verdana.ttf", 18)
+                text_font = ImageFont.truetype("calibri.ttf", 16)
             elif category == "cool":
-                title_font = ImageFont.truetype("calibri.ttf", 40)
-                header_font = ImageFont.truetype("arial.ttf", 28)
-                stat_font = ImageFont.truetype("consola.ttf", 24)
-                text_font = ImageFont.truetype("calibri.ttf", 22)
+                title_font = ImageFont.truetype("calibri.ttf", 28)
+                header_font = ImageFont.truetype("arial.ttf", 20)
+                stat_font = ImageFont.truetype("consola.ttf", 18)
+                text_font = ImageFont.truetype("calibri.ttf", 16)
             elif category == "heroic":
-                title_font = ImageFont.truetype("impact.ttf", 40)
-                header_font = ImageFont.truetype("impact.ttf", 28)
-                stat_font = ImageFont.truetype("arial.ttf", 24)
-                text_font = ImageFont.truetype("tahoma.ttf", 22)
+                title_font = ImageFont.truetype("impact.ttf", 28)
+                header_font = ImageFont.truetype("impact.ttf", 20)
+                stat_font = ImageFont.truetype("arial.ttf", 18)
+                text_font = ImageFont.truetype("tahoma.ttf", 16)
             elif category == "legendary":
-                title_font = ImageFont.truetype("times.ttf", 40)
-                header_font = ImageFont.truetype("georgia.ttf", 28)
-                stat_font = ImageFont.truetype("georgia.ttf", 24)
-                text_font = ImageFont.truetype("times.ttf", 22)
+                title_font = ImageFont.truetype("times.ttf", 28)
+                header_font = ImageFont.truetype("georgia.ttf", 20)
+                stat_font = ImageFont.truetype("georgia.ttf", 18)
+                text_font = ImageFont.truetype("times.ttf", 16)
             elif category == "mystical":
-                title_font = ImageFont.truetype("georgia.ttf", 40)
-                header_font = ImageFont.truetype("times.ttf", 28)
-                stat_font = ImageFont.truetype("georgia.ttf", 24)
-                text_font = ImageFont.truetype("trebuc.ttf", 22)
+                title_font = ImageFont.truetype("georgia.ttf", 28)
+                header_font = ImageFont.truetype("times.ttf", 20)
+                stat_font = ImageFont.truetype("georgia.ttf", 18)
+                text_font = ImageFont.truetype("trebuc.ttf", 16)
             elif category == "chaotic":
-                title_font = ImageFont.truetype("impact.ttf", 40)
-                header_font = ImageFont.truetype("trebuc.ttf", 28)
-                stat_font = ImageFont.truetype("consola.ttf", 24)
-                text_font = ImageFont.truetype("calibri.ttf", 22)
+                title_font = ImageFont.truetype("impact.ttf", 28)
+                header_font = ImageFont.truetype("trebuc.ttf", 20)
+                stat_font = ImageFont.truetype("consola.ttf", 18)
+                text_font = ImageFont.truetype("calibri.ttf", 16)
             elif category == "fierce":
-                title_font = ImageFont.truetype("impact.ttf", 40)
-                header_font = ImageFont.truetype("arial.ttf", 28)
-                stat_font = ImageFont.truetype("verdana.ttf", 24)
-                text_font = ImageFont.truetype("tahoma.ttf", 22)
+                title_font = ImageFont.truetype("impact.ttf", 28)
+                header_font = ImageFont.truetype("arial.ttf", 20)
+                stat_font = ImageFont.truetype("verdana.ttf", 18)
+                text_font = ImageFont.truetype("tahoma.ttf", 16)
             elif category == "wise":
-                title_font = ImageFont.truetype("times.ttf", 40)
-                header_font = ImageFont.truetype("georgia.ttf", 28)
-                stat_font = ImageFont.truetype("consola.ttf", 24)
-                text_font = ImageFont.truetype("georgia.ttf", 22)
+                title_font = ImageFont.truetype("times.ttf", 28)
+                header_font = ImageFont.truetype("georgia.ttf", 20)
+                stat_font = ImageFont.truetype("consola.ttf", 18)
+                text_font = ImageFont.truetype("georgia.ttf", 16)
             else:
                 # Default fallback
-                title_font = ImageFont.truetype("arial.ttf", 40)
-                header_font = ImageFont.truetype("arial.ttf", 28)
-                stat_font = ImageFont.truetype("arial.ttf", 24)
-                text_font = ImageFont.truetype("arial.ttf", 22)
+                title_font = ImageFont.truetype("arial.ttf", 28)
+                header_font = ImageFont.truetype("arial.ttf", 20)
+                stat_font = ImageFont.truetype("arial.ttf", 18)
+                text_font = ImageFont.truetype("arial.ttf", 16)
         except (OSError, IOError) as e:
             print(f"[DEBUG] Category fallback fonts failed: {e}")
             print("[DEBUG] Trying final fallback...")
             # Final fallback - try to use system fonts with proper sizes
             try:
-                title_font = ImageFont.truetype("arial.ttf", 40)
-                header_font = ImageFont.truetype("arial.ttf", 28)
-                stat_font = ImageFont.truetype("arial.ttf", 24)
-                text_font = ImageFont.truetype("arial.ttf", 22)
+                title_font = ImageFont.truetype("arial.ttf", 28)
+                header_font = ImageFont.truetype("arial.ttf", 20)
+                stat_font = ImageFont.truetype("arial.ttf", 18)
+                text_font = ImageFont.truetype("arial.ttf", 16)
                 print("[DEBUG] Successfully loaded final fallback fonts")
             except (OSError, IOError):
-                # Absolute last resort - force larger fonts
-                print("WARNING: All font loading failed - forcing larger fonts")
-                # Create a larger default font by scaling
+                # Absolute last resort - use larger cross-platform fallback
+                print("WARNING: All font loading failed - using larger cross-platform fallback")
                 try:
-                    # Try common Windows fonts
-                    title_font = ImageFont.truetype("C:/Windows/Fonts/arial.ttf", 40)
-                    header_font = ImageFont.truetype("C:/Windows/Fonts/arial.ttf", 28)
-                    stat_font = ImageFont.truetype("C:/Windows/Fonts/arial.ttf", 24)
-                    text_font = ImageFont.truetype("C:/Windows/Fonts/arial.ttf", 22)
-                    print("Successfully loaded Windows fonts")
-                except:
-                    # Last resort - use default but create a larger version
-                    print("Using scaled default fonts")
-                    base_font = ImageFont.load_default()
-                    # Create larger fonts by using a scaling factor
-                    title_font = ImageFont.truetype("arial.ttf", 40) if os.path.exists("arial.ttf") else base_font
-                    header_font = ImageFont.truetype("arial.ttf", 28) if os.path.exists("arial.ttf") else base_font
-                    stat_font = ImageFont.truetype("arial.ttf", 24) if os.path.exists("arial.ttf") else base_font
-                    text_font = ImageFont.truetype("arial.ttf", 22) if os.path.exists("arial.ttf") else base_font
+                    # Try DejaVuSans which is commonly available on Linux systems
+                    title_font = ImageFont.truetype("DejaVuSans.ttf", 60)
+                    header_font = ImageFont.truetype("DejaVuSans.ttf", 45)
+                    stat_font = ImageFont.truetype("DejaVuSans.ttf", 40)
+                    text_font = ImageFont.truetype("DejaVuSans.ttf", 35)
+                    print("[DEBUG] Successfully loaded DejaVuSans fallback fonts")
+                except (OSError, IOError):
+                    # Last resort - use default font with larger sizes
+                    print("[DEBUG] Using default font with larger sizes")
+                    try:
+                        # Try to load default font and scale it up
+                        base_font = ImageFont.load_default()
+                        # Create larger fonts by using a scaling factor
+                        title_font = ImageFont.truetype("arial.ttf", 60) if os.path.exists("arial.ttf") else base_font
+                        header_font = ImageFont.truetype("arial.ttf", 45) if os.path.exists("arial.ttf") else base_font
+                        stat_font = ImageFont.truetype("arial.ttf", 40) if os.path.exists("arial.ttf") else base_font
+                        text_font = ImageFont.truetype("arial.ttf", 35) if os.path.exists("arial.ttf") else base_font
+                        print("[DEBUG] Using scaled default fonts")
+                    except:
+                        # Absolute last resort - use default font as-is
+                        print("[DEBUG] Using default font as-is")
+                        base_font = ImageFont.load_default()
+                        title_font = base_font
+                        header_font = base_font
+                        stat_font = base_font
+                        text_font = base_font
+    
+    # Log which font loading path succeeded
+    print(f"[DEBUG] Font loading complete - Title: {title_font}, Header: {header_font}, Stat: {stat_font}, Text: {text_font}")
     
     # Simple ornate border with glow effect like original
     corner_radius = 15
