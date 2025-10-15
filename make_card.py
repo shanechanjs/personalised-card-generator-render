@@ -107,7 +107,7 @@ def generate_card_data(traits, api_key):
                         "content": """You are a creative personality card designer who creates hilarious, entertaining character cards. Based on the 5 things about this character, generate a JSON response with the following structure:
 
 {
-    "card_name": "Creative and funny name based on personality traits in the things about this character",
+    "card_name": "Creative and funny name based on personality traits in the things about this character (max 25 characters including spaces)",
     "custom_type": "One of the 20 personality types below that BEST matches the character",
     "custom_type_icon": "A single Japanese kanji character or Unicode symbol (not emoji) that represents this personality type. Use only characters that will render properly as text (e.g., 気 for mood, 炎 for fire/spicy, 鬼 for chaotic, 心 for emotional types, etc.)",
     "trait_icon": "A single emoji that represents the most prominent trait from the 5 things about this character",
@@ -152,7 +152,7 @@ MOVEMENT & AVOIDANCE:
 - "Simp": Chronically and pathetically eager to please a specific person or group
 
 IMPORTANT RULES:
-1. CARD NAME: If a person's name is mentioned, incorporate it. Otherwise, create a funny/creative name from personality traits. NEVER use generic names or filenames.
+1. CARD NAME: Must be max 25 characters including spaces. If a person's name is mentioned, incorporate it. Otherwise, create a funny/creative name from personality traits. NEVER use generic names or filenames.
 2. Choose the MOST FITTING personality type from the 20 options above based on the dominant trait in the things about this character.
 3. Select a single Japanese kanji character or Unicode symbol (not emoji) for custom_type_icon that visually represents that personality type. Ensure the character will render properly in standard fonts.
 4. Select a different emoji for trait_icon that represents the most prominent trait from the 5 things about this character.
@@ -851,7 +851,7 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
         title_font = ImageFont.truetype(fonts["title"], 14)
         header_font = ImageFont.truetype(fonts["header"], 16)
         stat_font = ImageFont.truetype(fonts["stat"], 12)
-        text_font = ImageFont.truetype(fonts["text"], 7)
+        text_font = ImageFont.truetype(fonts["text"], 10)
         print("[DEBUG] Successfully loaded category-specific fonts")
     except (OSError, IOError) as e:
         print(f"[DEBUG] Category fonts failed: {e}")
@@ -862,48 +862,48 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
                 title_font = ImageFont.truetype("comic.ttf", 14)
                 header_font = ImageFont.truetype("comic.ttf", 16)
                 stat_font = ImageFont.truetype("verdana.ttf", 12)
-                text_font = ImageFont.truetype("calibri.ttf", 7)
+                text_font = ImageFont.truetype("calibri.ttf", 10)
             elif category == "cool":
                 title_font = ImageFont.truetype("calibri.ttf", 14)
                 header_font = ImageFont.truetype("arial.ttf", 16)
                 stat_font = ImageFont.truetype("consola.ttf", 12)
-                text_font = ImageFont.truetype("calibri.ttf", 7)
+                text_font = ImageFont.truetype("calibri.ttf", 10)
             elif category == "heroic":
                 title_font = ImageFont.truetype("impact.ttf", 14)
                 header_font = ImageFont.truetype("impact.ttf", 16)
                 stat_font = ImageFont.truetype("arial.ttf", 12)
-                text_font = ImageFont.truetype("tahoma.ttf", 9)
+                text_font = ImageFont.truetype("tahoma.ttf", 10)
             elif category == "legendary":
                 title_font = ImageFont.truetype("times.ttf", 14)
                 header_font = ImageFont.truetype("georgia.ttf", 16)
                 stat_font = ImageFont.truetype("georgia.ttf", 12)
-                text_font = ImageFont.truetype("times.ttf", 9)
+                text_font = ImageFont.truetype("times.ttf", 10)
             elif category == "mystical":
                 title_font = ImageFont.truetype("georgia.ttf", 14)
                 header_font = ImageFont.truetype("times.ttf", 16)
                 stat_font = ImageFont.truetype("georgia.ttf", 12)
-                text_font = ImageFont.truetype("trebuc.ttf", 9)
+                text_font = ImageFont.truetype("trebuc.ttf", 10)
             elif category == "chaotic":
                 title_font = ImageFont.truetype("impact.ttf", 14)
                 header_font = ImageFont.truetype("trebuc.ttf", 16)
                 stat_font = ImageFont.truetype("consola.ttf", 12)
-                text_font = ImageFont.truetype("calibri.ttf", 7)
+                text_font = ImageFont.truetype("calibri.ttf", 10)
             elif category == "fierce":
                 title_font = ImageFont.truetype("impact.ttf", 14)
                 header_font = ImageFont.truetype("arial.ttf", 16)
                 stat_font = ImageFont.truetype("verdana.ttf", 12)
-                text_font = ImageFont.truetype("tahoma.ttf", 9)
+                text_font = ImageFont.truetype("tahoma.ttf", 10)
             elif category == "wise":
                 title_font = ImageFont.truetype("times.ttf", 14)
                 header_font = ImageFont.truetype("georgia.ttf", 16)
                 stat_font = ImageFont.truetype("consola.ttf", 12)
-                text_font = ImageFont.truetype("georgia.ttf", 9)
+                text_font = ImageFont.truetype("georgia.ttf", 10)
             else:
                 # Default fallback
                 title_font = ImageFont.truetype("arial.ttf", 14)
                 header_font = ImageFont.truetype("arial.ttf", 16)
                 stat_font = ImageFont.truetype("arial.ttf", 12)
-                text_font = ImageFont.truetype("arial.ttf", 7)
+                text_font = ImageFont.truetype("arial.ttf", 10)
         except (OSError, IOError) as e:
             print(f"[DEBUG] Category fallback fonts failed: {e}")
             print("[DEBUG] Trying final fallback...")
@@ -912,7 +912,7 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
                 title_font = ImageFont.truetype("arial.ttf", 14)
                 header_font = ImageFont.truetype("arial.ttf", 16)
                 stat_font = ImageFont.truetype("arial.ttf", 12)
-                text_font = ImageFont.truetype("arial.ttf", 7)
+                text_font = ImageFont.truetype("arial.ttf", 10)
                 print("[DEBUG] Successfully loaded final fallback fonts")
             except (OSError, IOError):
                 # Absolute last resort - use larger cross-platform fallback
@@ -922,7 +922,7 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
                     title_font = ImageFont.truetype("DejaVuSans.ttf", 28)
                     header_font = ImageFont.truetype("DejaVuSans.ttf", 32)
                     stat_font = ImageFont.truetype("DejaVuSans.ttf", 24)
-                    text_font = ImageFont.truetype("DejaVuSans.ttf", 14)
+                    text_font = ImageFont.truetype("DejaVuSans.ttf", 20)
                     print("[DEBUG] Successfully loaded DejaVuSans fallback fonts")
                 except (OSError, IOError):
                     # Last resort - use default font with larger sizes
@@ -934,7 +934,7 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
                         title_font = ImageFont.truetype("arial.ttf", 28) if os.path.exists("arial.ttf") else base_font
                         header_font = ImageFont.truetype("arial.ttf", 32) if os.path.exists("arial.ttf") else base_font
                         stat_font = ImageFont.truetype("arial.ttf", 24) if os.path.exists("arial.ttf") else base_font
-                        text_font = ImageFont.truetype("arial.ttf", 14) if os.path.exists("arial.ttf") else base_font
+                        text_font = ImageFont.truetype("arial.ttf", 20) if os.path.exists("arial.ttf") else base_font
                         print("[DEBUG] Using scaled default fonts")
                     except:
                         # Absolute last resort - use default font as-is
@@ -984,18 +984,17 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     print(f"[DEBUG] Type icon: '{type_icon}' (length: {len(type_icon)})")
     print(f"[DEBUG] Type icon repr: {repr(type_icon)}")
     
-    # Try to load a Unicode-capable font for icons
+    # Try to load a Unicode-capable font for type badge (larger size)
     try:
-        icon_font = ImageFont.truetype("arial.ttf", 16)  # Arial supports more Unicode
+        icon_font = ImageFont.truetype("arial.ttf", 20)  # Arial supports more Unicode, increased size
     except (OSError, IOError):
         try:
-            icon_font = ImageFont.truetype("DejaVuSans.ttf", 16)
+            icon_font = ImageFont.truetype("DejaVuSans.ttf", 20)
         except (OSError, IOError):
             icon_font = header_font  # Fallback to header font
     
-    # Calculate width for type badge (kanji only, no icon)
-    type_with_kanji = f"{type_icon} {type_text}"
-    type_bbox = draw.textbbox((0, 0), type_with_kanji, font=icon_font)
+    # Calculate width for type badge (text only, no icons)
+    type_bbox = draw.textbbox((0, 0), type_text, font=icon_font)
     type_width = type_bbox[2] - type_bbox[0] + 20
     type_x = card_width - margin - type_width - 15
     type_y = header_y + 15
@@ -1004,11 +1003,11 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     draw.rounded_rectangle([type_x, type_y, type_x + type_width, type_y + 30], 
                          radius=8, fill=colors['accent'])
     
-    # Draw type with kanji character using Unicode-capable font (no icon symbol)
+    # Draw type text only (no icons/emojis)
     try:
-        draw.text((type_x + 10, type_y + 5), type_with_kanji, fill=colors['background'], font=icon_font)
+        draw.text((type_x + 10, type_y + 5), type_text, fill=colors['background'], font=icon_font)
     except Exception as e:
-        print(f"[DEBUG] Failed to draw type with kanji: {e}")
+        print(f"[DEBUG] Failed to draw type: {e}")
         # Fallback: draw just the type text
         draw.text((type_x + 10, type_y + 5), type_text, fill=colors['background'], font=header_font)
     
@@ -1083,25 +1082,30 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     stat_width = (card_width - 2 * margin - 20) // 2
     for i, (label, value) in enumerate(stats):
         x = margin + 10 + (i * stat_width)
-        y = stats_y + 20
         
-        # Stat background circle
-        circle_radius = 35
+        # Stat background circle - larger size
+        circle_radius = 45
         circle_x = x + stat_width // 2
-        circle_y = y + 30
+        # Center the circle vertically in the stats box
+        # stats_height = 140, account for label height (~15px) above circle
+        label_offset = 25
+        circle_y = stats_y + (stats_height // 2) + (label_offset // 2)
+        
         draw.ellipse([circle_x - circle_radius, circle_y - circle_radius, 
                      circle_x + circle_radius, circle_y + circle_radius], 
                    fill=colors['accent'])
         
-        # Stat label
+        # Stat label - positioned above circle
         label_bbox = draw.textbbox((0, 0), label, font=stat_font)
         label_width = label_bbox[2] - label_bbox[0]
-        draw.text((circle_x - label_width // 2, y), label, fill=colors['text'], font=stat_font)
+        label_y = circle_y - circle_radius - label_offset
+        draw.text((circle_x - label_width // 2, label_y), label, fill=colors['text'], font=stat_font)
         
-        # Stat value
+        # Stat value - centered in circle
         value_bbox = draw.textbbox((0, 0), str(value), font=stat_font)
         value_width = value_bbox[2] - value_bbox[0]
-        draw.text((circle_x - value_width // 2, circle_y + 10), str(value), 
+        value_height = value_bbox[3] - value_bbox[1]
+        draw.text((circle_x - value_width // 2, circle_y - value_height // 2), str(value), 
                 fill=colors['background'], font=stat_font)
     
     # 5. Ability section with enhanced styling like original
@@ -1118,7 +1122,7 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     # Effect description
     effect_desc = card_data.get('effect_description', 'No description available.')
     # Wrap text - use full available width
-    max_chars = (card_width - 2 * margin - 40) // 7
+    max_chars = (card_width - 2 * margin - 40) // 8
     wrapped_desc = textwrap.fill(effect_desc, width=max_chars)
     # Draw description without shadow
     draw.text((margin + 20, ability_y + 15), wrapped_desc, fill=colors['text'], font=text_font)
