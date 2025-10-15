@@ -92,7 +92,7 @@ def generate_card_data(prompts, api_key):
         client = openai.OpenAI(api_key=api_key)
         
         # Combine prompts into a single user message
-        user_prompt = "Here are five facts about this character:\n\n"
+        user_prompt = "Here are five things about this character:\n\n"
         for i, prompt in enumerate(prompts, 1):
             user_prompt += f"{i}. {prompt}\n"
         
@@ -104,7 +104,7 @@ def generate_card_data(prompts, api_key):
                 messages=[
                     {
                         "role": "system",
-                        "content": """You are a creative personality card designer who creates hilarious, entertaining character cards. Based on the 5 facts provided, generate a JSON response with the following structure:
+                        "content": """You are a creative personality card designer who creates hilarious, entertaining character cards. Based on the 5 things about this character, generate a JSON response with the following structure:
 
 {
     "card_name": "Creative and funny name based on personality traits in the facts",
@@ -114,7 +114,7 @@ def generate_card_data(prompts, api_key):
     "stat1_value": number (100-3000, increments of 100),
     "stat2_name": "Different creative stat name that complements stat1",
     "stat2_value": number (100-3000, increments of 100),
-    "effect_description": "Memes from internet culture. 3-5 sentences. Must include a clear nod to EACH of the 5 facts (at least one distinct idea per fact). Keep it punchy, funny, and readable. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).",
+    "effect_description": "Write like a Yu-Gi-Oh card effect description with meme-like twist. 3-5 sentences. Must include a clear nod to EACH of the 5 things (at least one distinct idea per thing). Use Yu-Gi-Oh formatting style (e.g., 'When this card is activated...', 'This card cannot be...', etc.) with internet meme humor. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).",
     "visual_effects": ["effect1", "effect2"] // Suggest 2-3 visual effects like "sparkles", "flames", "lightning", "glitch", "shadows", "stars", "spiral", "smoke", "neon", "bubbles"
 }
 
@@ -151,12 +151,12 @@ MOVEMENT & AVOIDANCE:
 - "Simp": Chronically and pathetically eager to please a specific person or group
 
 IMPORTANT RULES:
-1. CARD NAME: If a person's name is mentioned in the facts, incorporate it. Otherwise, create a funny/creative name from personality traits. NEVER use generic names or filenames.
+1. CARD NAME: If a person's name is mentioned, incorporate it. Otherwise, create a funny/creative name from personality traits. NEVER use generic names or filenames.
 2. Choose the MOST FITTING personality type from the 20 options above based on the dominant trait in the facts.
 3. Select an emoji for custom_type_icon that visually represents that personality type.
 4. Create 2 UNIQUE and CREATIVE stat names that match the personality (not generic ATK/DEF).
 5. Stat values should increment by 100s and somewhat reflect personality strength (100-3000 range).
-6. Effect description: savage roast (PG-16), chaotic meme energy, 3-5 COMPLETE sentences (no cut-off mid-sentence), MUST reference a core idea from EACH of the 5 facts. Keep under 380 characters to ensure all sentences are complete. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).
+6. Effect description: Write like a Yu-Gi-Oh card effect with meme-like twist, 3-5 COMPLETE sentences (no cut-off mid-sentence), MUST reference a core idea from EACH of the 5 things. Use Yu-Gi-Oh formatting style with internet humor. Keep under 380 characters to ensure all sentences are complete. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).
 7. Suggest 2-3 visual effects that would enhance the card's personality aesthetically.
 
 Examples:
@@ -235,11 +235,11 @@ Examples:
             missing = _find_uncovered_facts(effect_desc, prompts)
             if missing:
                 # Targeted rewrite to include all 5 facts
-                rewrite_user = "Rewrite ONLY the effect_description below into 3-5 COMPLETE sentences in a savage roast (PG-16), deep-internet meme tone. It must nod to EACH of the 5 facts with at least one distinct idea per fact. Keep it punchy and readable. Max 380 characters total. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).\n\nFacts:\n" + "\n".join(f"- {i+1}. {p}" for i, p in enumerate(prompts)) + "\n\nCurrent effect_description:\n" + effect_desc + "\n\nReturn only the rewritten effect_description text."
+                rewrite_user = "Rewrite ONLY the effect_description below into 3-5 COMPLETE sentences in Yu-Gi-Oh card effect style with meme-like twist. It must nod to EACH of the 5 things with at least one distinct idea per thing. Use Yu-Gi-Oh formatting (e.g., 'When this card is activated...', 'This card cannot be...') with internet humor. Max 380 characters total. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).\n\nThings about character:\n" + "\n".join(f"- {i+1}. {p}" for i, p in enumerate(prompts)) + "\n\nCurrent effect_description:\n" + effect_desc + "\n\nReturn only the rewritten effect_description text."
                 rewrite_resp = client.chat.completions.create(
                     model="gpt-4o",
                     messages=[
-                        {"role": "system", "content": "You refine humorous card blurbs to be more meme-like while preserving factual coverage."},
+                        {"role": "system", "content": "You refine humorous card descriptions to match Yu-Gi-Oh card formatting with meme-like twists while preserving factual coverage."},
                         {"role": "user", "content": rewrite_user},
                     ],
                     max_tokens=300,
@@ -847,14 +847,14 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
         title_font = ImageFont.truetype(fonts["title"], 28)
         header_font = ImageFont.truetype(fonts["header"], 20)
         stat_font = ImageFont.truetype(fonts["stat"], 18)
-        text_font = ImageFont.truetype(fonts["text"], 18)
+        text_font = ImageFont.truetype(fonts["text"], 16)
     except (OSError, IOError):
         # Fallback to default fonts if category fonts not available
         try:
             title_font = ImageFont.truetype("arial.ttf", 28)
             header_font = ImageFont.truetype("arial.ttf", 20)
             stat_font = ImageFont.truetype("arial.ttf", 18)
-            text_font = ImageFont.truetype("arial.ttf", 18)
+            text_font = ImageFont.truetype("arial.ttf", 16)
         except (OSError, IOError):
             title_font = ImageFont.load_default()
             header_font = ImageFont.load_default()
@@ -1007,7 +1007,7 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     # Effect description
     effect_desc = card_data.get('effect_description', 'No description available.')
     # Wrap text - use full available width
-    max_chars = (card_width - 2 * margin - 40) // 6  # Reduced divisor for more characters per line
+    max_chars = (card_width - 2 * margin - 40) // 10  # Match original text wrap calculation
     wrapped_desc = textwrap.fill(effect_desc, width=max_chars)
     # Draw description without shadow
     draw.text((margin + 20, ability_y + 15), wrapped_desc, fill=colors['text'], font=text_font)

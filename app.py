@@ -1057,7 +1057,7 @@ def index():
                 function displayCardAbility(cardData) {
                     const effectDesc = cardData.effect_description || 'No effect.';
                     const cardType = cardData.card_type || 'Monster';
-                    const titleText = cardType === 'Monster' ? 'Monster Effect' : (cardType === 'Spell' ? 'Spell Effect' : 'Trap Effect');
+                    const titleText = 'Deets/Lore';
                     
                     cardAbility.innerHTML = `
                         <div class="ability-name">${titleText}</div>
