@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Card Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">
+                <span class="title-icon">⚔️</span>
+                Character Card Generator
+                <span class="title-icon">🛡️</span>
+            </h1>
+            <p class="subtitle">Create epic trading cards from your images using AI magic!</p>
+        </header>
+
+        <main class="main-content">
+            <div class="card-generator">
+                <form id="cardForm" class="generator-form" enctype="multipart/form-data">
+                    <div class="form-section">
+                        <h2 class="section-title">📸 Upload Character Image</h2>
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-content">
+                                <div class="upload-icon">📁</div>
+                                <p class="upload-text">Click to upload or drag & drop</p>
+                                <p class="upload-hint">PNG, JPG, JPEG, GIF, BMP (max 16MB)</p>
+                            </div>
+                            <input type="file" id="imageInput" name="image" accept="image/*">
+                        </div>
+                        <div class="image-preview" id="imagePreview" style="display: none;">
+                            <img id="previewImg" src="" alt="Preview">
+                            <button type="button" class="remove-image" id="removeImage">✕</button>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2 class="section-title">📝 Character Facts</h2>
+                        <p class="section-description">Tell us 5 interesting facts about your character. AI will generate a hilarious meme-style card name based on these facts!</p>
+                        <div class="facts-container">
+                            <div class="fact-input-group">
+                                <label for="fact1">Fact 1:</label>
+                                <input type="text" id="fact1" name="fact1" placeholder="e.g., They have a ridiculously specific collection of vintage hotel soap bars" required>
+                            </div>
+                            <div class="fact-input-group">
+                                <label for="fact2">Fact 2:</label>
+                                <input type="text" id="fact2" name="fact2" placeholder="e.g., Their phone's autocorrect changes 'the' to 'the magnificent banana-lizard'" required>
+                            </div>
+                            <div class="fact-input-group">
+                                <label for="fact3">Fact 3:</label>
+                                <input type="text" id="fact3" name="fact3" placeholder="e.g., They can flawlessly imitate the sound of an old-school fax machine" required>
+                            </div>
+                            <div class="fact-input-group">
+                                <label for="fact4">Fact 4:</label>
+                                <input type="text" id="fact4" name="fact4" placeholder="e.g., Their signature food order is plain buttered toast and milk" required>
+                            </div>
+                            <div class="fact-input-group">
+                                <label for="fact5">Fact 5:</label>
+                                <input type="text" id="fact5" name="fact5" placeholder="e.g., They have a secret online identity as 'The Doom-Waffle'" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2 class="section-title">🎨 Card Customization (Optional)</h2>
+                        <div class="customization-group">
+                            <label for="custom_descriptor">Custom Card Descriptor:</label>
+                            <input type="text" id="custom_descriptor" name="custom_descriptor" placeholder="e.g., Epic Fighter, Mystic Mage, Legendary Hero">
+                            <p class="hint">Note: Card names are AI-generated based on your facts. This field is for additional customization only.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="generate-btn" id="generateBtn">
+                            <span class="btn-text">Generate Card</span>
+                            <span class="btn-icon">✨</span>
+                        </button>
+                        <div class="loading" id="loading" style="display: none;">
+                            <div class="spinner"></div>
+                            <span>Generating your epic card...</span>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="result-section" id="resultSection" style="display: none;">
+                    <h2 class="section-title">🎴 Your Generated Card</h2>
+                    <div class="card-preview-container">
+                        <div class="card-preview" id="cardPreview">
+                            <img id="generatedCard" src="" alt="Generated Card">
+                        </div>
+                        <div class="card-info" id="cardInfo">
+                            <h3 id="characterName"></h3>
+                            <div class="card-stats" id="cardStats"></div>
+                            <div class="card-ability" id="cardAbility"></div>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="download-btn" id="downloadBtn">
+                            <span class="btn-icon">⬇️</span>
+                            Download Card
+                        </button>
+                        <button class="new-card-btn" id="newCardBtn">
+                            <span class="btn-icon">🔄</span>
+                            Create Another Card
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="{{ url_for('gallery') }}" class="footer-link">View Gallery</a>
+                <a href="#" class="footer-link" onclick="showHelp()">Help</a>
+            </div>
+            <p class="footer-text">Powered by AI Magic ✨</p>
+        </footer>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal" id="helpModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>How to Use the Character Card Generator</h3>
+                <button class="close-modal" onclick="closeHelp()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h4>1. Upload an Image</h4>
+                    <p>Choose a clear image of your character. Supported formats: PNG, JPG, JPEG, GIF, BMP (max 16MB).</p>
+                </div>
+                <div class="help-section">
+                    <h4>2. Enter Character Facts</h4>
+                    <p>Write 5 interesting, creative facts about your character. Be imaginative and specific!</p>
+                </div>
+                <div class="help-section">
+                    <h4>3. Customize (Optional)</h4>
+                    <p>Add a custom descriptor for your card name, or leave blank for auto-generation.</p>
+                </div>
+                <div class="help-section">
+                    <h4>4. Generate & Download</h4>
+                    <p>Click "Generate Card" and wait for AI to create your epic trading card!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
