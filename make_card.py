@@ -848,10 +848,10 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     print(f"[DEBUG] Loading fonts for category: {category}")
     print(f"[DEBUG] Font paths: {fonts}")
     try:
-        title_font = ImageFont.truetype(fonts["title"], 20)
+        title_font = ImageFont.truetype(fonts["title"], 16)
         header_font = ImageFont.truetype(fonts["header"], 16)
         stat_font = ImageFont.truetype(fonts["stat"], 14)
-        text_font = ImageFont.truetype(fonts["text"], 12)
+        text_font = ImageFont.truetype(fonts["text"], 10)
         print("[DEBUG] Successfully loaded category-specific fonts")
     except (OSError, IOError) as e:
         print(f"[DEBUG] Category fonts failed: {e}")
@@ -859,70 +859,70 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
         # Fallback to different fonts based on category if category fonts not available
         try:
             if category == "cute":
-                title_font = ImageFont.truetype("comic.ttf", 20)
+                title_font = ImageFont.truetype("comic.ttf", 16)
                 header_font = ImageFont.truetype("comic.ttf", 16)
                 stat_font = ImageFont.truetype("verdana.ttf", 14)
-                text_font = ImageFont.truetype("calibri.ttf", 12)
+                text_font = ImageFont.truetype("calibri.ttf", 10)
             elif category == "cool":
-                title_font = ImageFont.truetype("calibri.ttf", 20)
+                title_font = ImageFont.truetype("calibri.ttf", 16)
                 header_font = ImageFont.truetype("arial.ttf", 16)
                 stat_font = ImageFont.truetype("consola.ttf", 14)
-                text_font = ImageFont.truetype("calibri.ttf", 12)
+                text_font = ImageFont.truetype("calibri.ttf", 10)
             elif category == "heroic":
-                title_font = ImageFont.truetype("impact.ttf", 20)
+                title_font = ImageFont.truetype("impact.ttf", 16)
                 header_font = ImageFont.truetype("impact.ttf", 16)
                 stat_font = ImageFont.truetype("arial.ttf", 14)
-                text_font = ImageFont.truetype("tahoma.ttf", 12)
+                text_font = ImageFont.truetype("tahoma.ttf", 10)
             elif category == "legendary":
-                title_font = ImageFont.truetype("times.ttf", 20)
+                title_font = ImageFont.truetype("times.ttf", 16)
                 header_font = ImageFont.truetype("georgia.ttf", 16)
                 stat_font = ImageFont.truetype("georgia.ttf", 14)
-                text_font = ImageFont.truetype("times.ttf", 12)
+                text_font = ImageFont.truetype("times.ttf", 10)
             elif category == "mystical":
-                title_font = ImageFont.truetype("georgia.ttf", 20)
+                title_font = ImageFont.truetype("georgia.ttf", 16)
                 header_font = ImageFont.truetype("times.ttf", 16)
                 stat_font = ImageFont.truetype("georgia.ttf", 14)
-                text_font = ImageFont.truetype("trebuc.ttf", 12)
+                text_font = ImageFont.truetype("trebuc.ttf", 10)
             elif category == "chaotic":
-                title_font = ImageFont.truetype("impact.ttf", 20)
+                title_font = ImageFont.truetype("impact.ttf", 16)
                 header_font = ImageFont.truetype("trebuc.ttf", 16)
                 stat_font = ImageFont.truetype("consola.ttf", 14)
-                text_font = ImageFont.truetype("calibri.ttf", 12)
+                text_font = ImageFont.truetype("calibri.ttf", 10)
             elif category == "fierce":
-                title_font = ImageFont.truetype("impact.ttf", 20)
+                title_font = ImageFont.truetype("impact.ttf", 16)
                 header_font = ImageFont.truetype("arial.ttf", 16)
                 stat_font = ImageFont.truetype("verdana.ttf", 14)
-                text_font = ImageFont.truetype("tahoma.ttf", 12)
+                text_font = ImageFont.truetype("tahoma.ttf", 10)
             elif category == "wise":
-                title_font = ImageFont.truetype("times.ttf", 20)
+                title_font = ImageFont.truetype("times.ttf", 16)
                 header_font = ImageFont.truetype("georgia.ttf", 16)
                 stat_font = ImageFont.truetype("consola.ttf", 14)
-                text_font = ImageFont.truetype("georgia.ttf", 12)
+                text_font = ImageFont.truetype("georgia.ttf", 10)
             else:
                 # Default fallback
-                title_font = ImageFont.truetype("arial.ttf", 20)
+                title_font = ImageFont.truetype("arial.ttf", 16)
                 header_font = ImageFont.truetype("arial.ttf", 16)
                 stat_font = ImageFont.truetype("arial.ttf", 14)
-                text_font = ImageFont.truetype("arial.ttf", 12)
+                text_font = ImageFont.truetype("arial.ttf", 10)
         except (OSError, IOError) as e:
             print(f"[DEBUG] Category fallback fonts failed: {e}")
             print("[DEBUG] Trying final fallback...")
             # Final fallback - try to use system fonts with proper sizes
             try:
-                title_font = ImageFont.truetype("arial.ttf", 20)
+                title_font = ImageFont.truetype("arial.ttf", 16)
                 header_font = ImageFont.truetype("arial.ttf", 16)
                 stat_font = ImageFont.truetype("arial.ttf", 14)
-                text_font = ImageFont.truetype("arial.ttf", 12)
+                text_font = ImageFont.truetype("arial.ttf", 10)
                 print("[DEBUG] Successfully loaded final fallback fonts")
             except (OSError, IOError):
                 # Absolute last resort - use larger cross-platform fallback
                 print("WARNING: All font loading failed - using larger cross-platform fallback")
                 try:
                     # Try DejaVuSans which is commonly available on Linux systems
-                    title_font = ImageFont.truetype("DejaVuSans.ttf", 40)
+                    title_font = ImageFont.truetype("DejaVuSans.ttf", 32)
                     header_font = ImageFont.truetype("DejaVuSans.ttf", 32)
                     stat_font = ImageFont.truetype("DejaVuSans.ttf", 28)
-                    text_font = ImageFont.truetype("DejaVuSans.ttf", 24)
+                    text_font = ImageFont.truetype("DejaVuSans.ttf", 20)
                     print("[DEBUG] Successfully loaded DejaVuSans fallback fonts")
                 except (OSError, IOError):
                     # Last resort - use default font with larger sizes
@@ -931,10 +931,10 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
                         # Try to load default font and scale it up
                         base_font = ImageFont.load_default()
                         # Create larger fonts by using a scaling factor
-                        title_font = ImageFont.truetype("arial.ttf", 40) if os.path.exists("arial.ttf") else base_font
+                        title_font = ImageFont.truetype("arial.ttf", 32) if os.path.exists("arial.ttf") else base_font
                         header_font = ImageFont.truetype("arial.ttf", 32) if os.path.exists("arial.ttf") else base_font
                         stat_font = ImageFont.truetype("arial.ttf", 28) if os.path.exists("arial.ttf") else base_font
-                        text_font = ImageFont.truetype("arial.ttf", 24) if os.path.exists("arial.ttf") else base_font
+                        text_font = ImageFont.truetype("arial.ttf", 20) if os.path.exists("arial.ttf") else base_font
                         print("[DEBUG] Using scaled default fonts")
                     except:
                         # Absolute last resort - use default font as-is
@@ -981,9 +981,24 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     type_icon = card_data.get('custom_type_icon', '✨')
     trait_icon = card_data.get('trait_icon', '⭐')
     
+    # Debug logging for icons
+    print(f"[DEBUG] Type icon: '{type_icon}' (length: {len(type_icon)})")
+    print(f"[DEBUG] Trait icon: '{trait_icon}' (length: {len(trait_icon)})")
+    print(f"[DEBUG] Type icon repr: {repr(type_icon)}")
+    print(f"[DEBUG] Trait icon repr: {repr(trait_icon)}")
+    
+    # Try to load a Unicode-capable font for icons
+    try:
+        icon_font = ImageFont.truetype("arial.ttf", 16)  # Arial supports more Unicode
+    except (OSError, IOError):
+        try:
+            icon_font = ImageFont.truetype("DejaVuSans.ttf", 16)
+        except (OSError, IOError):
+            icon_font = header_font  # Fallback to header font
+    
     # Calculate width for type badge with icon
     type_with_icon = f"{type_icon} {type_text}"
-    type_bbox = draw.textbbox((0, 0), type_with_icon, font=header_font)
+    type_bbox = draw.textbbox((0, 0), type_with_icon, font=icon_font)
     type_width = type_bbox[2] - type_bbox[0] + 20
     type_x = card_width - margin - type_width - 15
     type_y = header_y + 15
@@ -991,12 +1006,24 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     # Type badge background
     draw.rounded_rectangle([type_x, type_y, type_x + type_width, type_y + 30], 
                          radius=8, fill=colors['accent'])
-    draw.text((type_x + 10, type_y + 5), type_with_icon, fill=colors['background'], font=header_font)
+    
+    # Draw type with icon using Unicode-capable font
+    try:
+        draw.text((type_x + 10, type_y + 5), type_with_icon, fill=colors['background'], font=icon_font)
+    except Exception as e:
+        print(f"[DEBUG] Failed to draw type with icon: {e}")
+        # Fallback: draw just the type text
+        draw.text((type_x + 10, type_y + 5), type_text, fill=colors['background'], font=header_font)
     
     # Add trait icon next to the type badge
     trait_icon_x = type_x + type_width + 10
     trait_icon_y = type_y + 5
-    draw.text((trait_icon_x, trait_icon_y), trait_icon, fill=colors['text'], font=header_font)
+    try:
+        draw.text((trait_icon_x, trait_icon_y), trait_icon, fill=colors['text'], font=icon_font)
+    except Exception as e:
+        print(f"[DEBUG] Failed to draw trait icon: {e}")
+        # Fallback: draw a simple symbol
+        draw.text((trait_icon_x, trait_icon_y), "*", fill=colors['text'], font=header_font)
     
     # 3. Image section with rounded frame like original
     image_y = header_y + header_height + 20
