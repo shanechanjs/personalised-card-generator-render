@@ -997,8 +997,7 @@ def index():
 
                 function showResult(data) {
                     // Display generated card
-                    # generatedCard.src = `/card/${encodeURIComponent(data.filename)}`;
-                    generatedCard.src = `${encodeURIComponent(data.filename)}`;
+                    generatedCard.src = `/card/${encodeURIComponent(data.filename)}`;
                     generatedCard.alt = `${data.character_name} Card`;
                     
                     // Display character name
@@ -1026,25 +1025,20 @@ def index():
                 function displayCardStats(cardData) {
                     let stats = [];
                     
-                    // Display different stats based on card type
-                    if (cardData.card_type === 'Monster') {
-                        stats = [
-                            { label: 'Type', value: cardData.monster_type || 'Effect' },
-                            { label: 'Attribute', value: cardData.attribute || 'DARK' },
-                            { label: 'Level', value: cardData.level || 4 },
-                            { label: 'ATK', value: cardData.attack || 0 },
-                            { label: 'DEF', value: cardData.defense || 0 }
-                        ];
-                    } else if (cardData.card_type === 'Spell') {
-                        stats = [
-                            { label: 'Card Type', value: 'Spell Card' },
-                            { label: 'Spell Type', value: cardData.spell_type || 'Normal' }
-                        ];
-                    } else if (cardData.card_type === 'Trap') {
-                        stats = [
-                            { label: 'Card Type', value: 'Trap Card' },
-                            { label: 'Trap Type', value: cardData.trap_type || 'Normal' }
-                        ];
+                    // Display personality card stats
+                    if (cardData.stat1_name && cardData.stat1_value) {
+                        stats.push({ label: cardData.stat1_name, value: cardData.stat1_value });
+                    }
+                    if (cardData.stat2_name && cardData.stat2_value) {
+                        stats.push({ label: cardData.stat2_name, value: cardData.stat2_value });
+                    }
+                    
+                    // Add personality type info
+                    if (cardData.custom_type) {
+                        stats.push({ label: 'Type', value: cardData.custom_type });
+                    }
+                    if (cardData.custom_type_icon) {
+                        stats.push({ label: 'Icon', value: cardData.custom_type_icon });
                     }
 
                     cardStats.innerHTML = stats.map(stat => `
@@ -1057,8 +1051,7 @@ def index():
 
                 function displayCardAbility(cardData) {
                     const effectDesc = cardData.effect_description || 'No effect.';
-                    const cardType = cardData.card_type || 'Monster';
-                    const titleText = 'Deets/Lore';
+                    const titleText = 'Special Ability';
                     
                     cardAbility.innerHTML = `
                         <div class="ability-name">${titleText}</div>

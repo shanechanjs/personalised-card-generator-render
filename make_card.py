@@ -608,19 +608,19 @@ def generate_card_web(uploaded_file, traits, custom_descriptor=None):
         
         print(f"[GENERATE_CARD_WEB] Card data generated successfully: {card_data.get('card_name', 'Unknown')}")
         
-        # Create card image (descriptor parameter is now ignored)
+        # Generate filename using AI-generated card name (before creating image)
+        card_name = card_data.get('card_name', 'Unknown Card')
+        import time
+        safe_name = "".join(c if c.isalnum() or c in (' ', '_') else '_' for c in card_name)
+        safe_name = safe_name.replace(' ', '_')
+        timestamp = int(time.time())
+        filename = f"{safe_name}_{timestamp}.png"
+        
+        # Create card image with the specific filename
         print("[GENERATE_CARD_WEB] Creating card image...")
-        success = create_card_image(image_path, card_data)
+        success = create_card_image(image_path, card_data, filename)
         
         if success:
-            card_name = card_data.get('card_name', 'Unknown Card')
-            # Generate filename using AI-generated card name
-            import time
-            safe_name = "".join(c if c.isalnum() or c in (' ', '_') else '_' for c in card_name)
-            safe_name = safe_name.replace(' ', '_')
-            timestamp = int(time.time())
-            filename = f"{safe_name}_{timestamp}.png"
-            
             print(f"[GENERATE_CARD_WEB] Card generation successful: {filename}")
             return {
                 "success": True,
@@ -1110,13 +1110,14 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     draw.text((margin + 20, ability_y + 15), wrapped_desc, fill=colors['text'], font=text_font)
 
 
-def create_card_image(source_image_path, card_data):
+def create_card_image(source_image_path, card_data, filename=None):
     """
     Create a personality card with AI-generated name and custom type.
     
     Args:
         source_image_path (str): Path to the source image file
         card_data (dict): Generated card data with stats and abilities
+        filename (str, optional): Specific filename to use for saving
         
     Returns:
         bool: True if successful, False otherwise
@@ -1165,14 +1166,15 @@ def create_card_image(source_image_path, card_data):
         # Ensure Generated_Cards directory exists
         os.makedirs("Generated_Cards", exist_ok=True)
         
-        # Generate filename using AI-generated card name
-        import time
-        card_name = card_data.get('card_name', 'Unknown_Card')
-        # Sanitize filename
-        safe_name = "".join(c if c.isalnum() or c in (' ', '_') else '_' for c in card_name)
-        safe_name = safe_name.replace(' ', '_')
-        timestamp = int(time.time())
-        filename = f"{safe_name}_{timestamp}.png"
+        # Use provided filename or generate one
+        if not filename:
+            import time
+            card_name = card_data.get('card_name', 'Unknown_Card')
+            # Sanitize filename
+            safe_name = "".join(c if c.isalnum() or c in (' ', '_') else '_' for c in card_name)
+            safe_name = safe_name.replace(' ', '_')
+            timestamp = int(time.time())
+            filename = f"{safe_name}_{timestamp}.png"
         
         output_path = os.path.join("Generated_Cards", filename)
         canvas.save(output_path, 'PNG')
