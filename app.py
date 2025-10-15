@@ -24,7 +24,7 @@ except ImportError as e:
     print(f"Warning: Could not import make_card module: {e}")
     CARD_GENERATION_AVAILABLE = False
     # Create a dummy function for when card generation is not available
-    def generate_card_web(uploaded_file, facts, custom_descriptor=None):
+    def generate_card_web(uploaded_file, traits, custom_descriptor=None):
         return {'success': False, 'error': 'Card generation not available - API keys not configured'}
 # Load API keys from environment variables (required for Render deployment)
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
@@ -273,24 +273,24 @@ def index():
                 transform: scale(1.1);
             }
 
-            .facts-container {
+            .traits-container {
                 display: grid;
                 gap: 20px;
             }
 
-            .fact-input-group {
+            .trait-input-group {
                 display: flex;
                 flex-direction: column;
                 gap: 8px;
             }
 
-            .fact-input-group label {
+            .trait-input-group label {
                 font-weight: 500;
                 color: #4a5568;
                 font-size: 1rem;
             }
 
-            .fact-input-group input {
+            .trait-input-group input {
                 padding: 15px;
                 border: 2px solid #e2e8f0;
                 border-radius: 10px;
@@ -299,7 +299,7 @@ def index():
                 background: white;
             }
 
-            .fact-input-group input:focus {
+            .trait-input-group input:focus {
                 outline: none;
                 border-color: #667eea;
                 box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -671,28 +671,28 @@ def index():
                         </div>
 
                         <div class="form-section">
-                            <h2 class="section-title">📝 Character Facts</h2>
-                            <p class="section-description">Tell us 5 interesting facts about your character. AI will generate a hilarious meme-style card name based on these facts!</p>
-                            <div class="facts-container">
-                                <div class="fact-input-group">
-                                    <label for="fact1">Fact 1:</label>
-                                    <input type="text" id="fact1" name="fact1" placeholder="e.g., They have a ridiculously specific collection of vintage hotel soap bars" required>
+                            <h2 class="section-title">📝 Character Traits</h2>
+                            <p class="section-description">Tell us 5 interesting things about your character. AI will generate a hilarious meme-style card name based on these traits!</p>
+                            <div class="traits-container">
+                                <div class="trait-input-group">
+                                    <label for="trait1">Trait 1:</label>
+                                    <input type="text" id="trait1" name="trait1" placeholder="e.g., They have a ridiculously specific collection of vintage hotel soap bars" required>
                                 </div>
-                                <div class="fact-input-group">
-                                    <label for="fact2">Fact 2:</label>
-                                    <input type="text" id="fact2" name="fact2" placeholder="e.g., Their phone's autocorrect changes 'the' to 'the magnificent banana-lizard'" required>
+                                <div class="trait-input-group">
+                                    <label for="trait2">Trait 2:</label>
+                                    <input type="text" id="trait2" name="trait2" placeholder="e.g., Their phone's autocorrect changes 'the' to 'the magnificent banana-lizard'" required>
                                 </div>
-                                <div class="fact-input-group">
-                                    <label for="fact3">Fact 3:</label>
-                                    <input type="text" id="fact3" name="fact3" placeholder="e.g., They can flawlessly imitate the sound of an old-school fax machine" required>
+                                <div class="trait-input-group">
+                                    <label for="trait3">Trait 3:</label>
+                                    <input type="text" id="trait3" name="trait3" placeholder="e.g., They can flawlessly imitate the sound of an old-school fax machine" required>
                                 </div>
-                                <div class="fact-input-group">
-                                    <label for="fact4">Fact 4:</label>
-                                    <input type="text" id="fact4" name="fact4" placeholder="e.g., Their signature food order is plain buttered toast and milk" required>
+                                <div class="trait-input-group">
+                                    <label for="trait4">Trait 4:</label>
+                                    <input type="text" id="trait4" name="trait4" placeholder="e.g., Their signature food order is plain buttered toast and milk" required>
                                 </div>
-                                <div class="fact-input-group">
-                                    <label for="fact5">Fact 5:</label>
-                                    <input type="text" id="fact5" name="fact5" placeholder="e.g., They have a secret online identity as 'The Doom-Waffle'" required>
+                                <div class="trait-input-group">
+                                    <label for="trait5">Trait 5:</label>
+                                    <input type="text" id="trait5" name="trait5" placeholder="e.g., They have a secret online identity as 'The Doom-Waffle'" required>
                                 </div>
                             </div>
                         </div>
@@ -702,7 +702,7 @@ def index():
                             <div class="customization-group">
                                 <label for="custom_descriptor">Custom Card Descriptor:</label>
                                 <input type="text" id="custom_descriptor" name="custom_descriptor" placeholder="e.g., Epic Fighter, Mystic Mage, Legendary Hero">
-                                <p class="hint">Note: Card names are AI-generated based on your facts. This field is for additional customization only.</p>
+                                <p class="hint">Note: Card names are AI-generated based on your traits. This field is for additional customization only.</p>
                             </div>
                         </div>
 
@@ -969,13 +969,13 @@ def index():
                         return false;
                     }
 
-                    // Check if all facts are filled
+                    // Check if all traits are filled
                     for (let i = 1; i <= 5; i++) {
-                        const factInput = document.getElementById(`fact${i}`);
-                        if (!factInput.value.trim()) {
-                            console.log(`Validation failed: Fact ${i} is empty`);
-                            showError(`Please fill in fact ${i}.`);
-                            factInput.focus();
+                        const traitInput = document.getElementById(`trait${i}`);
+                        if (!traitInput.value.trim()) {
+                            console.log(`Validation failed: Trait ${i} is empty`);
+                            showError(`Please fill in trait ${i}.`);
+                            traitInput.focus();
                             return false;
                         }
                     }
@@ -1143,7 +1143,7 @@ def index():
 
                 // Help modal functions
                 window.showHelp = function() {
-                    alert('How to Use the Personalised Card Generator:\\n\\n1. Upload an Image: Choose a clear image of your character. Supported formats: PNG, JPG, JPEG, GIF, BMP (max 16MB).\\n\\n2. Enter Character Facts: Write 5 interesting, creative facts about your character. Be imaginative and specific!\\n\\n3. Customize (Optional): Add a custom descriptor for your card name, or leave blank for auto-generation.\\n\\n4. Generate & Download: Click "Generate Card" and wait for AI to create your epic trading card!');
+                    alert('How to Use the Personalised Card Generator:\\n\\n1. Upload an Image: Choose a clear image of your character. Supported formats: PNG, JPG, JPEG, GIF, BMP (max 16MB).\\n\\n2. Enter Character Traits: Write 5 interesting, creative things about your character. Be imaginative and specific!\\n\\n3. Customize (Optional): Add a custom descriptor for your card name, or leave blank for auto-generation.\\n\\n4. Generate & Download: Click "Generate Card" and wait for AI to create your epic trading card!');
                 };
 
                 // Add some visual feedback for form interactions
@@ -1243,7 +1243,7 @@ def test_api():
 
 @app.route('/generate', methods=['POST'])
 def generate_card():
-    """Handle card generation from uploaded image and facts."""
+    """Handle card generation from uploaded image and traits."""
     print("\n" + "="*50)
     print("CARD GENERATION REQUEST RECEIVED")
     print("="*50)
@@ -1271,16 +1271,16 @@ def generate_card():
             print(f"ERROR: Invalid file type: {image_file.filename}")
             return jsonify({'success': False, 'error': 'Invalid file type. Please upload PNG, JPG, JPEG, GIF, or BMP.'})
         
-        # Get facts from form
-        print("Extracting facts from form...")
-        facts = []
+        # Get traits from form
+        print("Extracting traits from form...")
+        traits = []
         for i in range(1, 6):
-            fact = request.form.get(f'fact{i}', '').strip()
-            print(f"Fact {i}: {fact[:50]}{'...' if len(fact) > 50 else ''}")
-            if not fact:
-                print(f"ERROR: Fact {i} is empty")
-                return jsonify({'success': False, 'error': f'Fact {i} is required'})
-            facts.append(fact)
+            trait = request.form.get(f'trait{i}', '').strip()
+            print(f"Trait {i}: {trait[:50]}{'...' if len(trait) > 50 else ''}")
+            if not trait:
+                print(f"ERROR: Trait {i} is empty")
+                return jsonify({'success': False, 'error': f'Trait {i} is required'})
+            traits.append(trait)
         
         # Get optional custom descriptor
         custom_descriptor = request.form.get('custom_descriptor', '').strip()
@@ -1296,7 +1296,7 @@ def generate_card():
             return jsonify({'success': False, 'error': 'Card generation not available. Please check API key configuration.'})
         
         # Generate the card
-        result = generate_card_web(image_file, facts, custom_descriptor)
+        result = generate_card_web(image_file, traits, custom_descriptor)
         
         print(f"Card generation result: {result['success']}")
         if result['success']:

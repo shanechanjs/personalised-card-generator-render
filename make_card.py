@@ -62,12 +62,12 @@ if not OPENAI_API_KEY or not GEMINI_API_KEY:
     print("WARNING: API keys not configured - card generation will fail")
 
 
-def generate_card_data(prompts, api_key):
+def generate_card_data(traits, api_key):
     """
     Generate structured card data using OpenAI Chat Completions API.
     
     Args:
-        prompts (list): List of five text prompts
+        traits (list): List of five character traits
         api_key (str): OpenAI API key
         
     Returns:
@@ -77,7 +77,7 @@ def generate_card_data(prompts, api_key):
         print("Generating character card data with OpenAI GPT-4o...")
         print(f"API key provided: {'Yes' if api_key else 'No'}")
         print(f"API key length: {len(api_key) if api_key else 0}")
-        print(f"Prompts count: {len(prompts) if prompts else 0}")
+        print(f"Traits count: {len(traits) if traits else 0}")
         
         # Check if API key is valid
         if not api_key:
@@ -91,10 +91,10 @@ def generate_card_data(prompts, api_key):
         # Initialize OpenAI client
         client = openai.OpenAI(api_key=api_key)
         
-        # Combine prompts into a single user message
+        # Combine traits into a single user message
         user_prompt = "Here are five things about this character:\n\n"
-        for i, prompt in enumerate(prompts, 1):
-            user_prompt += f"{i}. {prompt}\n"
+        for i, trait in enumerate(traits, 1):
+            user_prompt += f"{i}. {trait}\n"
         
         # Make API call
         print("Making OpenAI API call...")
@@ -107,7 +107,7 @@ def generate_card_data(prompts, api_key):
                         "content": """You are a creative personality card designer who creates hilarious, entertaining character cards. Based on the 5 things about this character, generate a JSON response with the following structure:
 
 {
-    "card_name": "Creative and funny name based on personality traits in the facts",
+    "card_name": "Creative and funny name based on personality traits in the things about this character",
     "custom_type": "One of the 20 personality types below that BEST matches the character",
     "custom_type_icon": "A single emoji that represents this personality type",
     "stat1_name": "Creative stat name (e.g., 'Chaos', 'Rizz', 'Drama', 'Stealth', 'Cringe Level', 'Vibe Strength')",
@@ -152,7 +152,7 @@ MOVEMENT & AVOIDANCE:
 
 IMPORTANT RULES:
 1. CARD NAME: If a person's name is mentioned, incorporate it. Otherwise, create a funny/creative name from personality traits. NEVER use generic names or filenames.
-2. Choose the MOST FITTING personality type from the 20 options above based on the dominant trait in the facts.
+2. Choose the MOST FITTING personality type from the 20 options above based on the dominant trait in the things about this character.
 3. Select an emoji for custom_type_icon that visually represents that personality type.
 4. Create 2 UNIQUE and CREATIVE stat names that match the personality (not generic ATK/DEF).
 5. Stat values should increment by 100s and somewhat reflect personality strength (100-3000 range).
@@ -160,9 +160,9 @@ IMPORTANT RULES:
 7. Suggest 2-3 visual effects that would enhance the card's personality aesthetically.
 
 Examples:
-- Facts about being the life of the party → Type: "Juice", Icon: "⚡", Stats: "Charisma"/2400, "Energy"/2100
-- Facts about always ghosting plans → Type: "Ghost", Icon: "👻", Stats: "Vanish Speed"/2800, "Commitment"/200
-- Facts about excessive flexing → Type: "Flex", Icon: "💪", Stats: "Clout"/2700, "Humility"/100"""
+- Things about being the life of the party → Type: "Juice", Icon: "⚡", Stats: "Charisma"/2400, "Energy"/2100
+- Things about always ghosting plans → Type: "Ghost", Icon: "👻", Stats: "Vanish Speed"/2800, "Commitment"/200
+- Things about excessive flexing → Type: "Flex", Icon: "💪", Stats: "Clout"/2700, "Humility"/100"""
                     },
                     {
                         "role": "user",
@@ -218,11 +218,11 @@ Examples:
             tokens.sort(key=len, reverse=True)
             return tokens[:2] if tokens else (cleaned.split()[:1] if cleaned.split() else [])
 
-        def _find_uncovered_facts(desc_text, input_prompts):
+        def _find_uncovered_traits(desc_text, input_traits):
             desc_lc = desc_text.lower()
             missing_indices = []
-            for idx, fact in enumerate(input_prompts):
-                keywords = _extract_keywords_from_fact(fact)
+            for idx, trait in enumerate(input_traits):
+                keywords = _extract_keywords_from_fact(trait)
                 if not keywords:
                     continue
                 if not any(k in desc_lc for k in keywords):
@@ -232,10 +232,10 @@ Examples:
         # Perform coverage check and single-pass rewrite if needed
         try:
             effect_desc = card_data.get('effect_description', '') or ''
-            missing = _find_uncovered_facts(effect_desc, prompts)
+            missing = _find_uncovered_traits(effect_desc, traits)
             if missing:
-                # Targeted rewrite to include all 5 facts
-                rewrite_user = "Rewrite ONLY the effect_description below into 3-5 COMPLETE sentences in Yu-Gi-Oh card effect style with meme-like twist. It must nod to EACH of the 5 things with at least one distinct idea per thing. Use Yu-Gi-Oh formatting (e.g., 'When this card is activated...', 'This card cannot be...') with internet humor. Max 380 characters total. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).\n\nThings about character:\n" + "\n".join(f"- {i+1}. {p}" for i, p in enumerate(prompts)) + "\n\nCurrent effect_description:\n" + effect_desc + "\n\nReturn only the rewritten effect_description text."
+                # Targeted rewrite to include all 5 traits
+                rewrite_user = "Rewrite ONLY the effect_description below into 3-5 COMPLETE sentences in Yu-Gi-Oh card effect style with meme-like twist. It must nod to EACH of the 5 things with at least one distinct idea per thing. Use Yu-Gi-Oh formatting (e.g., 'When this card is activated...', 'This card cannot be...') with internet humor. Max 380 characters total. Use only basic ASCII characters (letters, numbers, spaces, and . , ! ? ' -).\n\nThings about character:\n" + "\n".join(f"- {i+1}. {t}" for i, t in enumerate(traits)) + "\n\nCurrent effect_description:\n" + effect_desc + "\n\nReturn only the rewritten effect_description text."
                 rewrite_resp = client.chat.completions.create(
                     model="gpt-4o",
                     messages=[
@@ -568,13 +568,13 @@ def save_uploaded_image(uploaded_file, original_filename):
     return file_path
 
 
-def generate_card_web(uploaded_file, facts, custom_descriptor=None):
+def generate_card_web(uploaded_file, traits, custom_descriptor=None):
     """
-    Generate a character card from web upload and facts using AI-generated names.
+    Generate a character card from web upload and traits using AI-generated names.
     
     Args:
         uploaded_file: Flask file object
-        facts (list): List of 5 character facts
+        traits (list): List of 5 character traits
         custom_descriptor (str, optional): Custom descriptor for filename (deprecated)
         
     Returns:
@@ -583,7 +583,7 @@ def generate_card_web(uploaded_file, facts, custom_descriptor=None):
     try:
         print(f"[GENERATE_CARD_WEB] Starting card generation...")
         print(f"[GENERATE_CARD_WEB] File: {uploaded_file.filename if uploaded_file else 'None'}")
-        print(f"[GENERATE_CARD_WEB] Facts count: {len(facts) if facts else 0}")
+        print(f"[GENERATE_CARD_WEB] Traits count: {len(traits) if traits else 0}")
         print(f"[GENERATE_CARD_WEB] API key available: {'Yes' if OPENAI_API_KEY else 'No'}")
         
         # Check if API key is available
@@ -599,7 +599,7 @@ def generate_card_web(uploaded_file, facts, custom_descriptor=None):
         
         # Generate card data with AI-generated name
         print("[GENERATE_CARD_WEB] Generating card data with AI...")
-        card_data = generate_card_data(facts, OPENAI_API_KEY)
+        card_data = generate_card_data(traits, OPENAI_API_KEY)
         if not card_data:
             print("[GENERATE_CARD_WEB] ERROR: Failed to generate card data")
             return {"success": False, "error": "Failed to generate card data. Check API key and try again."}
@@ -1140,20 +1140,20 @@ Example usage:
         print(f"[ERROR] Image file not found: {args.image_path}")
         sys.exit(1)
     
-    # Prepare prompts list
-    prompts = [args.prompt1, args.prompt2, args.prompt3, args.prompt4, args.prompt5]
+    # Prepare traits list
+    traits = [args.prompt1, args.prompt2, args.prompt3, args.prompt4, args.prompt5]
     
     # Display input information
     print("Character Card Generator")
     print("=" * 40)
     print(f"Source Image: {args.image_path}")
-    print("Character Facts:")
-    for i, prompt in enumerate(prompts, 1):
-        print(f"  {i}. {prompt}")
+    print("Character Traits:")
+    for i, trait in enumerate(traits, 1):
+        print(f"  {i}. {trait}")
     print("=" * 40)
     
     # Step 1: Generate character card data using AI
-    card_data = generate_card_data(prompts, OPENAI_API_KEY)
+    card_data = generate_card_data(traits, OPENAI_API_KEY)
     
     if not card_data:
         print("[ERROR] Failed to generate character card data. Exiting.")
