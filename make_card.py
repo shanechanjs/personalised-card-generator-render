@@ -851,7 +851,7 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
         title_font = ImageFont.truetype(fonts["title"], 14)
         header_font = ImageFont.truetype(fonts["header"], 16)
         stat_font = ImageFont.truetype(fonts["stat"], 12)
-        text_font = ImageFont.truetype(fonts["text"], 9)
+        text_font = ImageFont.truetype(fonts["text"], 7)
         print("[DEBUG] Successfully loaded category-specific fonts")
     except (OSError, IOError) as e:
         print(f"[DEBUG] Category fonts failed: {e}")
@@ -862,12 +862,12 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
                 title_font = ImageFont.truetype("comic.ttf", 14)
                 header_font = ImageFont.truetype("comic.ttf", 16)
                 stat_font = ImageFont.truetype("verdana.ttf", 12)
-                text_font = ImageFont.truetype("calibri.ttf", 9)
+                text_font = ImageFont.truetype("calibri.ttf", 7)
             elif category == "cool":
                 title_font = ImageFont.truetype("calibri.ttf", 14)
                 header_font = ImageFont.truetype("arial.ttf", 16)
                 stat_font = ImageFont.truetype("consola.ttf", 12)
-                text_font = ImageFont.truetype("calibri.ttf", 9)
+                text_font = ImageFont.truetype("calibri.ttf", 7)
             elif category == "heroic":
                 title_font = ImageFont.truetype("impact.ttf", 14)
                 header_font = ImageFont.truetype("impact.ttf", 16)
@@ -887,7 +887,7 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
                 title_font = ImageFont.truetype("impact.ttf", 14)
                 header_font = ImageFont.truetype("trebuc.ttf", 16)
                 stat_font = ImageFont.truetype("consola.ttf", 12)
-                text_font = ImageFont.truetype("calibri.ttf", 9)
+                text_font = ImageFont.truetype("calibri.ttf", 7)
             elif category == "fierce":
                 title_font = ImageFont.truetype("impact.ttf", 14)
                 header_font = ImageFont.truetype("arial.ttf", 16)
@@ -903,7 +903,7 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
                 title_font = ImageFont.truetype("arial.ttf", 14)
                 header_font = ImageFont.truetype("arial.ttf", 16)
                 stat_font = ImageFont.truetype("arial.ttf", 12)
-                text_font = ImageFont.truetype("arial.ttf", 10)
+                text_font = ImageFont.truetype("arial.ttf", 7)
         except (OSError, IOError) as e:
             print(f"[DEBUG] Category fallback fonts failed: {e}")
             print("[DEBUG] Trying final fallback...")
@@ -912,7 +912,7 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
                 title_font = ImageFont.truetype("arial.ttf", 14)
                 header_font = ImageFont.truetype("arial.ttf", 16)
                 stat_font = ImageFont.truetype("arial.ttf", 12)
-                text_font = ImageFont.truetype("arial.ttf", 10)
+                text_font = ImageFont.truetype("arial.ttf", 7)
                 print("[DEBUG] Successfully loaded final fallback fonts")
             except (OSError, IOError):
                 # Absolute last resort - use larger cross-platform fallback
@@ -922,7 +922,7 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
                     title_font = ImageFont.truetype("DejaVuSans.ttf", 28)
                     header_font = ImageFont.truetype("DejaVuSans.ttf", 32)
                     stat_font = ImageFont.truetype("DejaVuSans.ttf", 24)
-                    text_font = ImageFont.truetype("DejaVuSans.ttf", 18)
+                    text_font = ImageFont.truetype("DejaVuSans.ttf", 14)
                     print("[DEBUG] Successfully loaded DejaVuSans fallback fonts")
                 except (OSError, IOError):
                     # Last resort - use default font with larger sizes
@@ -934,7 +934,7 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
                         title_font = ImageFont.truetype("arial.ttf", 28) if os.path.exists("arial.ttf") else base_font
                         header_font = ImageFont.truetype("arial.ttf", 32) if os.path.exists("arial.ttf") else base_font
                         stat_font = ImageFont.truetype("arial.ttf", 24) if os.path.exists("arial.ttf") else base_font
-                        text_font = ImageFont.truetype("arial.ttf", 18) if os.path.exists("arial.ttf") else base_font
+                        text_font = ImageFont.truetype("arial.ttf", 14) if os.path.exists("arial.ttf") else base_font
                         print("[DEBUG] Using scaled default fonts")
                     except:
                         # Absolute last resort - use default font as-is
@@ -993,9 +993,9 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
         except (OSError, IOError):
             icon_font = header_font  # Fallback to header font
     
-    # Calculate width for type badge with kanji character
-    type_with_icon = f"{type_icon} {type_text}"
-    type_bbox = draw.textbbox((0, 0), type_with_icon, font=icon_font)
+    # Calculate width for type badge (kanji only, no icon)
+    type_with_kanji = f"{type_icon} {type_text}"
+    type_bbox = draw.textbbox((0, 0), type_with_kanji, font=icon_font)
     type_width = type_bbox[2] - type_bbox[0] + 20
     type_x = card_width - margin - type_width - 15
     type_y = header_y + 15
@@ -1004,9 +1004,9 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     draw.rounded_rectangle([type_x, type_y, type_x + type_width, type_y + 30], 
                          radius=8, fill=colors['accent'])
     
-    # Draw type with kanji character using Unicode-capable font
+    # Draw type with kanji character using Unicode-capable font (no icon symbol)
     try:
-        draw.text((type_x + 10, type_y + 5), type_with_icon, fill=colors['background'], font=icon_font)
+        draw.text((type_x + 10, type_y + 5), type_with_kanji, fill=colors['background'], font=icon_font)
     except Exception as e:
         print(f"[DEBUG] Failed to draw type with kanji: {e}")
         # Fallback: draw just the type text
@@ -1117,8 +1117,8 @@ def create_unified_card(canvas, draw, source_image_path, card_data, colors):
     
     # Effect description
     effect_desc = card_data.get('effect_description', 'No description available.')
-    # Wrap text - use full available width (doubled the length before wrapping)
-    max_chars = (card_width - 2 * margin - 40) // 6  # Double the text length before wrapping
+    # Wrap text - use full available width
+    max_chars = (card_width - 2 * margin - 40) // 7
     wrapped_desc = textwrap.fill(effect_desc, width=max_chars)
     # Draw description without shadow
     draw.text((margin + 20, ability_y + 15), wrapped_desc, fill=colors['text'], font=text_font)
